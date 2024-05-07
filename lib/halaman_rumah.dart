@@ -16,10 +16,12 @@ class _HalamanRumahState extends State<HalamanRumah> {
 
   Future<void> _getData() async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:8000/api/getRumah'));
+      final response =
+          await http.get(Uri.parse('http://localhost:8000/api/getRumah'));
       if (response.statusCode == 200) {
         setState(() {
-          _listData = List<Map<String, dynamic>>.from(jsonDecode(response.body));
+          _listData =
+              List<Map<String, dynamic>>.from(jsonDecode(response.body));
           _loading = false;
         });
       } else {
@@ -52,7 +54,11 @@ class _HalamanRumahState extends State<HalamanRumah> {
               itemBuilder: ((context, index) {
                 return Card(
                   child: ListTile(
-                    title: Text( _listData[index]['nama_cluster'] + '/' + _listData[index]['blok'] +" - "+ _listData[index]['nomor']),
+                    title: Text(_listData[index]['nama_cluster'] +
+                        '/' +
+                        _listData[index]['blok'] +
+                        " - " +
+                        _listData[index]['nomor']),
                     subtitle: Text(_listData[index]['status_stock']),
                   ),
                 );
