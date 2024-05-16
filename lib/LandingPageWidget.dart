@@ -129,18 +129,21 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
                       ),
                       SizedBox(width: 40),
                         ElevatedButton(
-                        onPressed: () {
+                          onPressed: () {
                           Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => PageRumah()),
+                            context,
+                            MaterialPageRoute(
+                            builder: (context) => PageRumah(),
+                            ),
                           );
-                        },
-                        style: ElevatedButton.styleFrom(
+                          },
+                          style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.black,
+                          ),
+                          child: Text('Search'),
                         ),
-                        child: Text('Search'),
-                        ),
+                     
                     ],
                   ),
                 ),
