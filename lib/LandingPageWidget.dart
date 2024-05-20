@@ -32,6 +32,27 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
       print('Error fetching data: $e');
     }
   }
+   void _sendDataToAPI() async {
+    final url = 'https://formsliving.com/api/getRumah/$_selectedOption1/$_selectedOption2/$_selectedOption3';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      // Navigate to the new page with selected options
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PageRumah(
+            option1: _selectedOption1,
+            option2: _selectedOption2,
+            option3: _selectedOption3,
+          ),
+        ),
+      );
+    } else {
+      // Handle error
+      print('Failed to fetch data');
+    }
+  }
 
   void initState() {
     super.initState();
@@ -129,14 +150,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
                       ),
                       SizedBox(width: 40),
                         ElevatedButton(
-                          onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (context) => PageRumah(),
-                            ),
-                          );
-                          },
+                          onPressed: _sendDataToAPI,
                           style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.black,

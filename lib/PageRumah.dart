@@ -1,9 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:formsliving/LandingPageWidget.dart';
 import 'package:formsliving/PageDetailRumah.dart';
+import 'package:http/http.dart' as http;
 
 class PageRumah extends StatefulWidget {
-  const PageRumah({Key? key}) : super(key: key);
+  final String option1;
+  final String option2;
+  final String option3;
 
+  PageRumah({
+    required this.option1,
+    required this.option2,
+    required this.option3,
+  });
   @override
   State<PageRumah> createState() => _PageRumahState();
 }
@@ -17,8 +28,35 @@ class _PageRumahState extends State<PageRumah> {
   int _sliderValue3 = 0; // Add this line
   int _sliderValue4 = 0; // Add this line
   int _sliderValue5 = 0; // Add this line
+  List<Map<String, dynamic>> _listDataRumah = [];
+
+  Future<void> fetchData() async {
+    String url =
+        'https://formsliving.com/api/getRumah/${widget.option1}/${widget.option2}/${widget.option3}';
+
+    try {
+      http.Response response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _listDataRumah =
+              List<Map<String, dynamic>>.from(jsonDecode(response.body));
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      // Handle network or other errors
+      // ...
+    }
+  }
 
   @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
@@ -35,6 +73,12 @@ class _PageRumahState extends State<PageRumah> {
                     ListTile(
                       title: Text('Advanced Search'),
                     ),
+
+                    // FOR CHECKING DATA
+                    Text('Fetched Data: ${_listDataRumah.toString()}'),
+                    Text('Option 1: ${widget.option1.toString()}'),
+                    Text('Option 2: ${widget.option2.toString()}'),
+                    Text('Option 3: ${widget.option3.toString()}'),
                     ExpansionPanelList(
                       elevation: 0,
                       expandedHeaderPadding: EdgeInsets.zero,
@@ -136,169 +180,127 @@ class _PageRumahState extends State<PageRumah> {
                                 decoration: InputDecoration(
                                   labelText: 'Pondasi',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Struktur',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Dinding Dalam',
                                 ),
-                                onChanged: (value) {
-                                  
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Dinding Luar',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Dinding Kamar Mandi',
                                 ),
-                                onChanged: (value) {
-                                
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Meja Dapur',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Luas Ruang Tidur',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Luas Ruang Keluarga',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Luas Kamar Mandi Utama',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Luas Teras Utama',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Rangka Atap',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Penutup Atap',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Kusen',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Daun Pintu',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Sanitary',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Plafon Dalam',
                                 ),
-                                onChanged: (value) {
-                                
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Handle',
                                 ),
-                                onChanged: (value) {
-                                  
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Lighting',
                                 ),
-                                onChanged: (value) {
-                                  
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Daya Listrik',
                                 ),
-                                onChanged: (value) {
-                                 
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Carport',
                                 ),
-                                onChanged: (value) {
-                                  
-                                },
+                                onChanged: (value) {},
                               ),
                               TextField(
                                 decoration: InputDecoration(
                                   labelText: 'Tangga',
                                 ),
-                                onChanged: (value) {
-                                  
-                                },
+                                onChanged: (value) {},
                               ),
                             ],
                           ),
@@ -333,7 +335,8 @@ class _PageRumahState extends State<PageRumah> {
                       padding: EdgeInsets.all(16),
                       child: GridView.count(
                         crossAxisCount: 3,
-                        children: List.generate(10, (index) {
+                        children: List.generate(_listDataRumah.length, (index) {
+                          var data = _listDataRumah[index];
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -371,62 +374,63 @@ class _PageRumahState extends State<PageRumah> {
                                         ),
                                       ),
                                     ),
-                                    Container(
+                                    AnimatedContainer(
+                                      duration: Duration(milliseconds: 500),
                                       padding: EdgeInsets.all(8),
-                                      color: Colors.black.withOpacity(0.5),
+                                      color: Colors.white.withOpacity(0.5),
                                       child: Column(
-                                      children: [
-                                        Text(
-                                        'Footer ${index + 1}',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        ),
-                                        Row(
-                                        mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
                                         children: [
-                                            Icon(Icons.bathtub,
-                                            color: Colors.white),
-                                            Text('Bathroom',
+                                          Text(
+                                            'Blok: ${data['blok']} - ${data['nomor']} / ${data['nama_cluster']}',
                                             style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 12,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                            ),
-                                            Icon(Icons.king_bed,
-                                            color: Colors.white),
-                                            Text('Bedroom',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                            ),
-                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Icon(Icons.bathtub,
+                                                  color: Colors.white),
+                                              Text(
+                                                'Bathroom',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              Icon(Icons.king_bed,
+                                                  color: Colors.white),
+                                              Text(
+                                                'Bedroom',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            'Blok: ${data['blok']} - ${data['nomor']}',
+                                            textAlign: TextAlign.left,
+                                          ),
+                                          // Text(
+                                          // 'Luas Bangunan: ${data.luasBangunan}',
+                                          // textAlign: TextAlign.left,
+                                          // ),
+                                          // Text(
+                                          // 'Lantai: ${data.lantai}',
+                                          // textAlign: TextAlign.left,
+                                          // ),
+                                          // Text(
+                                          // 'Projek: ${data.projek}', //database_nama
+                                          // textAlign: TextAlign.left,
+                                          // ),
                                         ],
-                                        
-                                        ),
-                                        Text(
-                                          'Luas Tanah: ',
-                                          textAlign: TextAlign.left,
-                                        ),
-                                        Text(
-                                          'Luas Bangunan:',
-                                          textAlign: TextAlign.left,
-                                        ),
-                                        Text(
-                                          'Lantai:',
-                                          textAlign: TextAlign.left,
-                                        ),
-                                        Text(
-                                          'Projek',
-                                          textAlign: TextAlign.left,
-                                        ),
-                                      ],
                                       ),
                                     ),
-                                    
                                   ],
                                 ),
                               ),
