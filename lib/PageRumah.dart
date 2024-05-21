@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:formsliving/LandingPageWidget.dart';
 import 'package:formsliving/PageDetailRumah.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart'; // Add this line
 
 class PageRumah extends StatefulWidget {
   final String option1;
@@ -42,6 +42,7 @@ class _PageRumahState extends State<PageRumah> {
           _listDataRumah =
               List<Map<String, dynamic>>.from(jsonDecode(response.body));
         });
+       
       } else {
         throw Exception('Failed to load data');
       }
@@ -50,11 +51,18 @@ class _PageRumahState extends State<PageRumah> {
       // ...
     }
   }
+  
 
   @override
   void initState() {
     super.initState();
     fetchData();
+  print(_listDataRumah);
+  }
+
+  String formatToRupiah(String number) {
+    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ');
+    return formatter.format(int.parse(number));
   }
 
   Widget build(BuildContext context) {
@@ -75,6 +83,9 @@ class _PageRumahState extends State<PageRumah> {
                     ),
 
                     // FOR CHECKING DATA
+                    Text(
+                      'Image URL: ${_listDataRumah[1]['img_tr']}',
+                    ),
                     Text('Fetched Data: ${_listDataRumah.toString()}'),
                     Text('Option 1: ${widget.option1.toString()}'),
                     Text('Option 2: ${widget.option2.toString()}'),
@@ -353,9 +364,10 @@ class _PageRumahState extends State<PageRumah> {
                                 height: 100,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/background.jpg'),
-                                    fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                    // 'https://i0.wp.com/www.emporioarchitect.com/upload/portofolio/1280/desain-rumah-klasik-2-lantai-18180122-44542826230922123843.jpg'),
+                                    "https://formsliving.com/Home/images/tipe/${data['img_tr']}"),
+                                  fit: BoxFit.cover,
                                   ),
                                 ),
                                 child: Column(
@@ -366,7 +378,7 @@ class _PageRumahState extends State<PageRumah> {
                                       padding: EdgeInsets.all(8),
                                       color: Colors.black.withOpacity(0.5),
                                       child: Text(
-                                        'Header ${index + 1}',
+                                        '${data['nama_projek']}',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -377,7 +389,7 @@ class _PageRumahState extends State<PageRumah> {
                                     AnimatedContainer(
                                       duration: Duration(milliseconds: 500),
                                       padding: EdgeInsets.all(8),
-                                      color: Colors.white.withOpacity(0.5),
+                                      color: Colors.black.withOpacity(0.5),
                                       child: Column(
                                         children: [
                                           Text(
@@ -395,7 +407,7 @@ class _PageRumahState extends State<PageRumah> {
                                               Icon(Icons.bathtub,
                                                   color: Colors.white),
                                               Text(
-                                                'Bathroom',
+                                                '${data['kmr_mandi_tr']}',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 12,
@@ -404,7 +416,7 @@ class _PageRumahState extends State<PageRumah> {
                                               Icon(Icons.king_bed,
                                                   color: Colors.white),
                                               Text(
-                                                'Bedroom',
+                                                '${data['kmr_tidur_tr']}',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 12,
@@ -413,21 +425,17 @@ class _PageRumahState extends State<PageRumah> {
                                             ],
                                           ),
                                           Text(
-                                            'Blok: ${data['blok']} - ${data['nomor']}',
+                                            'Harga: ${formatToRupiah(data['harga_tr'])}',
                                             textAlign: TextAlign.left,
                                           ),
-                                          // Text(
-                                          // 'Luas Bangunan: ${data.luasBangunan}',
-                                          // textAlign: TextAlign.left,
-                                          // ),
-                                          // Text(
-                                          // 'Lantai: ${data.lantai}',
-                                          // textAlign: TextAlign.left,
-                                          // ),
-                                          // Text(
-                                          // 'Projek: ${data.projek}', //database_nama
-                                          // textAlign: TextAlign.left,
-                                          // ),
+                                          Text(
+                                            'Luas Bangunan: ${data['luas_bangunan_tr']} m²',
+                                          textAlign: TextAlign.left,
+                                          ),
+                                       Text(
+                                          'Luas Tanah: ${data['luas_tanah']} m²',
+                                          textAlign: TextAlign.left,
+                                          ),
                                         ],
                                       ),
                                     ),

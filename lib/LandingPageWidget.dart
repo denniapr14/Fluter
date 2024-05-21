@@ -10,12 +10,18 @@ class LandingPageWidget extends StatefulWidget {
 
 class _LandingPageWidgetState extends State<LandingPageWidget> {
   String _selectedOption1 = 'Greenland';
-  String _selectedOption2 = '100000000';
-  String _selectedOption3 = '1000000000';
+  int _selectedOption2 = 100000000;
+  int _selectedOption3 = 1000000000;
   List<int> optionValues2 = [100000000, 200000000, 400000000];
   List<int> optionValues3 = [1000000000, 2000000000, 5000000000];
   List<Map<String, dynamic>> _listData = [];
+
   @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+
   Future<void> _getData() async {
     try {
       final response =
@@ -32,8 +38,10 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
       print('Error fetching data: $e');
     }
   }
-   void _sendDataToAPI() async {
-    final url = 'https://formsliving.com/api/getRumah/$_selectedOption1/$_selectedOption2/$_selectedOption3';
+
+  void _sendDataToAPI() async {
+    final url =
+        'https://formsliving.com/api/getRumah/$_selectedOption1/$_selectedOption2/$_selectedOption3';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -43,8 +51,8 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
         MaterialPageRoute(
           builder: (context) => PageRumah(
             option1: _selectedOption1,
-            option2: _selectedOption2,
-            option3: _selectedOption3,
+            option2: _selectedOption2.toString(),
+            option3: _selectedOption3.toString(),
           ),
         ),
       );
@@ -54,11 +62,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
     }
   }
 
-  void initState() {
-    super.initState();
-    _getData();
-  }
-
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -71,7 +75,6 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -107,57 +110,44 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
                         }).toList(),
                       ),
                       SizedBox(width: 40),
-                      DropdownButton<String>(
+                      DropdownButton<int>(
                         value: _selectedOption2,
-                        onChanged: (String? newValue) {
+                        onChanged: (int? newValue) {
                           setState(() {
                             _selectedOption2 = newValue!;
                           });
                         },
-                        items: <String>['100 jt', '200 jt', '400 jt']
-                            .asMap() // Iterate through both value and index
-                            .map((index, value) => MapEntry(
-                                  value,
-                                  DropdownMenuItem<String>(
-                                    value: optionValues2[index]
-                                        .toString(), // Use the corresponding value from optionValues
-                                    child: Text(value),
-                                  ),
-                                ))
-                            .values
-                            .toList(),
+                        items: optionValues2.map<DropdownMenuItem<int>>((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text('${value ~/ 1000000} jt'),
+                          );
+                        }).toList(),
                       ),
                       SizedBox(width: 40),
-                      DropdownButton<String>(
+                      DropdownButton<int>(
                         value: _selectedOption3,
-                        onChanged: (String? newValue) {
+                        onChanged: (int? newValue) {
                           setState(() {
                             _selectedOption3 = newValue!;
                           });
                         },
-                        items: <String>['1 Milyar', '2 Milyar', '5 Milyar']
-                           .asMap() // Iterate through both value and index
-                            .map((index, value) => MapEntry(
-                                  value,
-                                  DropdownMenuItem<String>(
-                                    value: optionValues3[index]
-                                        .toString(), // Use the corresponding value from optionValues
-                                    child: Text(value),
-                                  ),
-                                ))
-                            .values
-                            .toList(),
+                        items: optionValues3.map<DropdownMenuItem<int>>((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text('${value ~/ 1000000000} Milyar'),
+                          );
+                        }).toList(),
                       ),
                       SizedBox(width: 40),
-                        ElevatedButton(
-                          onPressed: _sendDataToAPI,
-                          style: ElevatedButton.styleFrom(
+                      ElevatedButton(
+                        onPressed: _sendDataToAPI,
+                        style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.black,
-                          ),
-                          child: Text('Search'),
                         ),
-                     
+                        child: Text('Search'),
+                      ),
                     ],
                   ),
                 ),
