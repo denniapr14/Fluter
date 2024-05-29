@@ -45,6 +45,10 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
+      print(_selectedOption1);
+      print(_selectedOption2);
+      print(_selectedOption3);
+      print('test');
       // Navigate to the new page with selected options
       Navigator.push(
         context,
@@ -117,7 +121,8 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
                             _selectedOption2 = newValue!;
                           });
                         },
-                        items: optionValues2.map<DropdownMenuItem<int>>((int value) {
+                        items: optionValues2
+                            .map<DropdownMenuItem<int>>((int value) {
                           return DropdownMenuItem<int>(
                             value: value,
                             child: Text('${value ~/ 1000000} jt'),
@@ -132,7 +137,8 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
                             _selectedOption3 = newValue!;
                           });
                         },
-                        items: optionValues3.map<DropdownMenuItem<int>>((int value) {
+                        items: optionValues3
+                            .map<DropdownMenuItem<int>>((int value) {
                           return DropdownMenuItem<int>(
                             value: value,
                             child: Text('${value ~/ 1000000000} Milyar'),

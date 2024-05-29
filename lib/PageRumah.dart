@@ -23,7 +23,6 @@ class _PageRumahState extends State<PageRumah> {
   String _selectedProjek = '';
 
   @override
-  
   bool _isSidebarVisible = true;
   bool _isExpanded = false;
   bool _isExpanded2 = false;
@@ -34,6 +33,8 @@ class _PageRumahState extends State<PageRumah> {
   int _sliderValue5 = 0; // Add this line
   List<Map<String, dynamic>> _listDataRumah = [];
   List<Map<String, dynamic>> _listDataProjek = [];
+  var kalmSelected = false;
+
   Future<void> fetchData() async {
     String url =
         'https://formsliving.com/api/getRumah/${widget.option1}/${widget.option2}/${widget.option3}';
@@ -77,7 +78,7 @@ class _PageRumahState extends State<PageRumah> {
     super.initState();
     _getDataProjek();
     fetchData();
-     _selectedProjek = widget.option1;
+    _selectedProjek = widget.option1;
     print(_listDataRumah);
   }
 
@@ -105,14 +106,14 @@ class _PageRumahState extends State<PageRumah> {
                     ),
 
                     // FOR CHECKING DATA
-                    Text(
-                      'Image URL: ${_listDataRumah[1]['img_tr']}',
-                    ),
-                    Text('Fetched Projek: ${_listDataProjek.toString()}'),
-                    Text('Fetched Data: ${_listDataRumah.toString()}'),
-                    Text('Option 1: ${widget.option1.toString()}'),
-                    Text('Option 2: ${widget.option2.toString()}'),
-                    Text('Option 3: ${widget.option3.toString()}'),
+                    // Text(
+                    //   'Image URL: ${_listDataRumah[1]['img_tr']}',
+                    // ),
+                    // Text('Fetched Projek: ${_listDataProjek.toString()}'),
+                    // Text('Fetched Data: ${_listDataRumah.toString()}'),
+                    // Text('Option 1: ${widget.option1.toString()}'),
+                    // Text('Option 2: ${widget.option2.toString()}'),
+                    // Text('Option 3: ${widget.option3.toString()}'),
                     ExpansionPanelList(
                       elevation: 0,
                       expandedHeaderPadding: EdgeInsets.zero,
@@ -137,20 +138,24 @@ class _PageRumahState extends State<PageRumah> {
                                 value: _selectedProjek == 'Greenland',
                                 onChanged: (bool? value) {
                                   setState(() {
-                                   _checkedProjek = _selectedProjek == 'Greenland' ? null : 'Greenland';
+                                    _checkedProjek =
+                                        _selectedProjek == 'Greenland'
+                                            ? null
+                                            : 'Greenland';
                                   });
                                 },
-                                
                               ),
                               CheckboxListTile(
                                 title: Text('Kalm'),
-                                value: _selectedProjek == 'Kalm',
+                                value: kalmSelected,
                                 onChanged: (bool? value) {
-                                  setState(() {
-                                     _checkedProjek = _selectedProjek == 'Kalm' ? null : 'Kalm';
-                                  });
+                                  if (kalmSelected == false) {
+                                    kalmSelected = true;
+                                  } else {
+                                    kalmSelected = false;
+                                  }
+                                  setState(() {});
                                 },
-                              
                               ),
                               Slider(
                                 value: _sliderValue2.toDouble(),
