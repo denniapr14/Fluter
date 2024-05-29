@@ -20,6 +20,10 @@ class PageRumah extends StatefulWidget {
 }
 
 class _PageRumahState extends State<PageRumah> {
+  String _selectedProjek = '';
+
+  @override
+  
   bool _isSidebarVisible = true;
   bool _isExpanded = false;
   bool _isExpanded2 = false;
@@ -29,7 +33,7 @@ class _PageRumahState extends State<PageRumah> {
   int _sliderValue4 = 0; // Add this line
   int _sliderValue5 = 0; // Add this line
   List<Map<String, dynamic>> _listDataRumah = [];
-
+  List<Map<String, dynamic>> _listDataProjek = [];
   Future<void> fetchData() async {
     String url =
         'https://formsliving.com/api/getRumah/${widget.option1}/${widget.option2}/${widget.option3}';
@@ -42,7 +46,6 @@ class _PageRumahState extends State<PageRumah> {
           _listDataRumah =
               List<Map<String, dynamic>>.from(jsonDecode(response.body));
         });
-       
       } else {
         throw Exception('Failed to load data');
       }
@@ -51,13 +54,31 @@ class _PageRumahState extends State<PageRumah> {
       // ...
     }
   }
-  
+
+  Future<void> _getDataProjek() async {
+    try {
+      final response =
+          await http.get(Uri.parse('https://formsliving.com/api/getProjek'));
+      if (response.statusCode == 200) {
+        setState(() {
+          _listDataProjek =
+              List<Map<String, dynamic>>.from(jsonDecode(response.body));
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    _getDataProjek();
     fetchData();
-  print(_listDataRumah);
+     _selectedProjek = widget.option1;
+    print(_listDataRumah);
   }
 
   String formatToRupiah(String number) {
@@ -66,6 +87,7 @@ class _PageRumahState extends State<PageRumah> {
   }
 
   Widget build(BuildContext context) {
+    var _checkedProjek;
     return MaterialApp(
       theme: ThemeData.dark(),
       home: Scaffold(
@@ -86,6 +108,7 @@ class _PageRumahState extends State<PageRumah> {
                     Text(
                       'Image URL: ${_listDataRumah[1]['img_tr']}',
                     ),
+                    Text('Fetched Projek: ${_listDataProjek.toString()}'),
                     Text('Fetched Data: ${_listDataRumah.toString()}'),
                     Text('Option 1: ${widget.option1.toString()}'),
                     Text('Option 2: ${widget.option2.toString()}'),
@@ -108,32 +131,43 @@ class _PageRumahState extends State<PageRumah> {
                           },
                           body: Column(
                             children: [
-                              Slider(
-                                value: _sliderValue.toDouble(),
-                                min: 0,
-                                max: 100,
-                                onChanged: (double value) {
+                              Text("Projek"),
+                              CheckboxListTile(
+                                title: Text('Greenland'),
+                                value: _selectedProjek == 'Greenland',
+                                onChanged: (bool? value) {
                                   setState(() {
-                                    _sliderValue = value.toInt();
+                                   _checkedProjek = _selectedProjek == 'Greenland' ? null : 'Greenland';
                                   });
                                 },
+                                
                               ),
-                              Text('Luas Tanah: $_sliderValue'),
+                              CheckboxListTile(
+                                title: Text('Kalm'),
+                                value: _selectedProjek == 'Kalm',
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                     _checkedProjek = _selectedProjek == 'Kalm' ? null : 'Kalm';
+                                  });
+                                },
+                              
+                              ),
                               Slider(
                                 value: _sliderValue2.toDouble(),
                                 min: 0,
-                                max: 100,
+                                max: 10000000000,
                                 onChanged: (double value) {
                                   setState(() {
                                     _sliderValue2 = value.toInt();
                                   });
                                 },
                               ),
-                              Text('Harga: $_sliderValue2'),
+                              Text(
+                                  'Harga: ${formatToRupiah(_sliderValue2.toString())}'),
                               Slider(
                                 value: _sliderValue3.toDouble(),
                                 min: 0,
-                                max: 100,
+                                max: 20,
                                 onChanged: (double value) {
                                   setState(() {
                                     _sliderValue3 = value.toInt();
@@ -144,7 +178,7 @@ class _PageRumahState extends State<PageRumah> {
                               Slider(
                                 value: _sliderValue4.toDouble(),
                                 min: 0,
-                                max: 100,
+                                max: 20,
                                 onChanged: (double value) {
                                   setState(() {
                                     _sliderValue4 = value.toInt();
@@ -153,16 +187,27 @@ class _PageRumahState extends State<PageRumah> {
                               ),
                               Text('Jumlah Kamar Mandi: $_sliderValue4'),
                               Slider(
+                                value: _sliderValue.toDouble(),
+                                min: 0,
+                                max: 500,
+                                onChanged: (double value) {
+                                  setState(() {
+                                    _sliderValue = value.toInt();
+                                  });
+                                },
+                              ),
+                              Text('Luas Tanah: $_sliderValue  m²'),
+                              Slider(
                                 value: _sliderValue5.toDouble(),
                                 min: 0,
-                                max: 100,
+                                max: 500,
                                 onChanged: (double value) {
                                   setState(() {
                                     _sliderValue5 = value.toInt();
                                   });
                                 },
                               ),
-                              Text('Luas Bangunan: $_sliderValue5'),
+                              Text('Luas Bangunan: $_sliderValue5  m²'),
                             ],
                           ),
                           isExpanded: _isExpanded,
@@ -319,6 +364,13 @@ class _PageRumahState extends State<PageRumah> {
                         ),
                       ],
                     ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueGrey,
+                      ),
+                      onPressed: () {},
+                      child: const Text("Search"),
+                    ),
                   ],
                 ),
               ),
@@ -353,8 +405,8 @@ class _PageRumahState extends State<PageRumah> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      PageDetailRumah(index: index + 1),
+                                  builder: (context) => PageDetailRumah(
+                                      index: data['id_tipe_rumah']),
                                 ),
                               );
                             },
@@ -364,10 +416,10 @@ class _PageRumahState extends State<PageRumah> {
                                 height: 100,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                  image: NetworkImage(
-                                    // 'https://i0.wp.com/www.emporioarchitect.com/upload/portofolio/1280/desain-rumah-klasik-2-lantai-18180122-44542826230922123843.jpg'),
-                                    "https://formsliving.com/Home/images/tipe/${data['img_tr']}"),
-                                  fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        // 'https://i0.wp.com/www.emporioarchitect.com/upload/portofolio/1280/desain-rumah-klasik-2-lantai-18180122-44542826230922123843.jpg'),
+                                        "https://formsliving.com/Home/images/tipe/${data['img_tr']}"),
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                                 child: Column(
@@ -430,11 +482,11 @@ class _PageRumahState extends State<PageRumah> {
                                           ),
                                           Text(
                                             'Luas Bangunan: ${data['luas_bangunan_tr']} m²',
-                                          textAlign: TextAlign.left,
+                                            textAlign: TextAlign.left,
                                           ),
-                                       Text(
-                                          'Luas Tanah: ${data['luas_tanah']} m²',
-                                          textAlign: TextAlign.left,
+                                          Text(
+                                            'Luas Tanah: ${data['luas_tanah']} m²',
+                                            textAlign: TextAlign.left,
                                           ),
                                         ],
                                       ),

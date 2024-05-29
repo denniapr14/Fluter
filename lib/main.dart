@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter MySQL Test'),
+        title: Text('Forms Living'),
       ),
       body: Center(
         child: Column(
