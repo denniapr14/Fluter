@@ -20,19 +20,24 @@ class PageRumah extends StatefulWidget {
 }
 
 class _PageRumahState extends State<PageRumah> {
-  String _selectedProjek = '';
+  List<String> _selectedProjek = [];
 
   @override
   bool _isSidebarVisible = true;
-  bool _isExpanded = false;
+  bool _isExpanded = true;
   bool _isExpanded2 = false;
-  int _sliderValue = 0; // Add this line
-  int _sliderValue2 = 0; // Add this line
-  int _sliderValue3 = 0; // Add this line
-  int _sliderValue4 = 0; // Add this line
-  int _sliderValue5 = 0; // Add this line
+  int _sliderMulaiHarga = 0;
+  int _sliderSelesaiHarga = 0; // Add this line
+  int _sliderJmlKmrMandi = 0; // Add this line
+  int _sliderJmlKmrTidur = 0; // Add this line
+  int _sliderLuasBangunan = 0; // Add this line
+  int _sliderLuasTanah = 0; // Add this line
+  final _formKey = GlobalKey<FormState>();
+
   List<Map<String, dynamic>> _listDataRumah = [];
+  List<Map<String, dynamic>> _listDataRumah2 = [];
   List<Map<String, dynamic>> _listDataProjek = [];
+  var _loadingCard = false;
   var kalmSelected = false;
 
   Future<void> fetchData() async {
@@ -73,13 +78,40 @@ class _PageRumahState extends State<PageRumah> {
     }
   }
 
+  void _searchRumah() async {
+    final querySearchParameters = {
+      if (_selectedProjek.isNotEmpty) 'projek[]': _selectedProjek,
+      if (_sliderMulaiHarga != null) 'min_harga': _sliderMulaiHarga,
+      if (_sliderSelesaiHarga != null) 'max_harga': _sliderSelesaiHarga,
+      if (_sliderJmlKmrTidur != null) 'jml_kmr_tidur': _sliderJmlKmrTidur,
+      if (_sliderJmlKmrMandi != null) 'jml_kmr_mandi': _sliderJmlKmrMandi,
+      if (_sliderLuasTanah != null) 'luas_tanah': _sliderLuasTanah,
+      if (_sliderLuasBangunan != null) 'luas_bangunan': _sliderLuasBangunan,
+    };
+
+    String url =
+        'https://formsliving.com/api/searchRumah/advanced/$querySearchParameters';
+    try {
+      http.Response response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        setState(() {
+          _listDataRumah2 =
+              List<Map<String, dynamic>>.from(jsonDecode(response.body));
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _getDataProjek();
     fetchData();
-    _selectedProjek = widget.option1;
-    print(_listDataRumah);
+    _getDataProjek();
+    _selectedProjek.add(widget.option1);
   }
 
   String formatToRupiah(String number) {
@@ -88,7 +120,14 @@ class _PageRumahState extends State<PageRumah> {
   }
 
   Widget build(BuildContext context) {
-    var _checkedProjek;
+    List<Map<String, dynamic>> _listDataProjekCheckbox = [];
+    for (var data in _listDataProjek) {
+      _listDataProjekCheckbox.add({
+        'nama_projek': data['nama_projek'],
+        'checked': _selectedProjek.contains(data['nama_projek']),
+      });
+    }
+    print(_listDataProjekCheckbox);
     return MaterialApp(
       theme: ThemeData.dark(),
       home: Scaffold(
@@ -104,7 +143,334 @@ class _PageRumahState extends State<PageRumah> {
                     ListTile(
                       title: Text('Advanced Search'),
                     ),
+                    Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            ExpansionPanelList(
+                              elevation: 0,
+                              expandedHeaderPadding: EdgeInsets.zero,
+                              expansionCallback: (int index, bool isExpanded) {
+                                setState(() {
+                                  _isExpanded = !_isExpanded;
+                                });
+                              },
+                              children: [
+                                ExpansionPanel(
+                                  headerBuilder:
+                                      (BuildContext context, bool isExpanded) {
+                                    return ListTile(
+                                      title: Text('Basic Search'),
+                                    );
+                                  },
+                                  body: Column(
+                                    children: [
+                                      Text("Projek"),
 
+                                      ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount:
+                                            _listDataProjekCheckbox.length,
+                                        itemBuilder: (context, index) {
+                                          // print( "DataRumah : $_listDataRumah");
+                                          return CheckboxListTile(
+                                            title: Text(
+                                                _listDataProjekCheckbox[index]
+                                                    ['nama_projek']),
+                                            value: _selectedProjek.contains(
+                                                _listDataProjek[index]
+                                                    ['nama_projek']),
+                                            onChanged: (bool? value) {
+                                              if (_listDataProjekCheckbox[index]
+                                                      ['checked'] ==
+                                                  false) {
+                                                _selectedProjek.add(
+                                                    _listDataProjekCheckbox[
+                                                        index]['nama_projek']);
+                                                _listDataProjekCheckbox[index]
+                                                    ['checked'] = true;
+                                              } else {
+                                                _selectedProjek.remove(
+                                                    _listDataProjekCheckbox[
+                                                        index]['nama_projek']);
+                                                _listDataProjekCheckbox[index]
+                                                    ['checked'] = false;
+                                              }
+                                              print(_selectedProjek);
+                                              setState(() {});
+                                              OnSaved:
+                                              (value) => _selectedProjek;
+                                              print(
+                                                  "Value Selected Projek $_selectedProjek");
+                                            },
+                                          );
+                                        },
+                                      ),
+
+                                      // CheckboxListTile(
+                                      //   title: Text('Kalm'),
+                                      //   value: kalmSelected,
+                                      //   onChanged: (bool? value) {
+                                      //     if (kalmSelected == false) {
+                                      //       kalmSelected = true;
+                                      //     } else {
+                                      //       kalmSelected = false;
+                                      //     }
+                                      //     setState(() {});
+                                      //   },
+                                      // ),
+                                      Slider(
+                                        value: _sliderMulaiHarga.toDouble(),
+                                        min: 0,
+                                        max: 100000000,
+                                        onChanged: (double value) {
+                                          setState(() {
+                                            _sliderMulaiHarga = value.toInt();
+                                          });
+                                          OnSaved:
+                                          (value) => _sliderMulaiHarga;
+                                        },
+                                      ),
+                                      Text(
+                                          'Harga Mulai: ${formatToRupiah(_sliderMulaiHarga.toString())}'),
+                                      Slider(
+                                        value: _sliderSelesaiHarga.toDouble(),
+                                        min: 0,
+                                        max: 100000000000,
+                                        onChanged: (double value) {
+                                          setState(() {
+                                            _sliderSelesaiHarga = value.toInt();
+                                          });
+                                          OnSaved:
+                                          (value) => _sliderSelesaiHarga;
+                                        },
+                                      ),
+                                      Text(
+                                          'Sampai Harga: ${formatToRupiah(_sliderSelesaiHarga.toString())}'),
+                                      Slider(
+                                        value: _sliderJmlKmrTidur.toDouble(),
+                                        min: 0,
+                                        max: 20,
+                                        onChanged: (double value) {
+                                          setState(() {
+                                            _sliderJmlKmrTidur = value.toInt();
+                                          });
+                                          OnSaved:
+                                          (value) => _sliderJmlKmrTidur;
+                                        },
+                                      ),
+                                      Text(
+                                          'Jumlah Kamar Tidur: $_sliderJmlKmrTidur'),
+                                      Slider(
+                                        value: _sliderJmlKmrMandi.toDouble(),
+                                        min: 0,
+                                        max: 20,
+                                        onChanged: (double value) {
+                                          setState(() {
+                                            _sliderJmlKmrMandi = value.toInt();
+                                          });
+                                          OnSaved:
+                                          (value) => _sliderJmlKmrMandi;
+                                        },
+                                      ),
+                                      Text(
+                                          'Jumlah Kamar Mandi: $_sliderJmlKmrMandi'),
+                                      Slider(
+                                        value: _sliderLuasTanah.toDouble(),
+                                        min: 0,
+                                        max: 500,
+                                        onChanged: (double value) {
+                                          setState(() {
+                                            _sliderLuasTanah = value.toInt();
+                                          });
+                                          OnSaved:
+                                          (value) => _sliderLuasTanah;
+                                        },
+                                      ),
+                                      Text('Luas Tanah: $_sliderLuasTanah  m²'),
+                                      Slider(
+                                        value: _sliderLuasBangunan.toDouble(),
+                                        min: 0,
+                                        max: 500,
+                                        onChanged: (double value) {
+                                          setState(() {
+                                            _sliderLuasBangunan = value.toInt();
+                                          });
+                                          OnSaved:
+                                          (value) => _sliderLuasBangunan;
+                                        },
+                                      ),
+                                      Text(
+                                          'Luas Bangunan: $_sliderLuasBangunan  m²'),
+                                    ],
+                                  ),
+                                  isExpanded: _isExpanded,
+                                ),
+                              ],
+                            ),
+                            ExpansionPanelList(
+                              elevation: 0,
+                              expandedHeaderPadding: EdgeInsets.zero,
+                              expansionCallback: (int index, bool isExpanded2) {
+                                setState(() {
+                                  _isExpanded2 = !_isExpanded2;
+                                });
+                              },
+                              children: [
+                                ExpansionPanel(
+                                  headerBuilder:
+                                      (BuildContext context, bool isExpanded2) {
+                                    return ListTile(
+                                      title: Text('Detail Rumah'),
+                                    );
+                                  },
+                                  body: Column(
+                                    children: [
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Pondasi',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Struktur',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Dinding Dalam',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Dinding Luar',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Dinding Kamar Mandi',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Meja Dapur',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Luas Ruang Tidur',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Luas Ruang Keluarga',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Luas Kamar Mandi Utama',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Luas Teras Utama',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Rangka Atap',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Penutup Atap',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Kusen',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Daun Pintu',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Sanitary',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Plafon Dalam',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Handle',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Lighting',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Daya Listrik',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Carport',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                      TextField(
+                                        decoration: InputDecoration(
+                                          labelText: 'Tangga',
+                                        ),
+                                        onChanged: (value) {},
+                                      ),
+                                    ],
+                                  ),
+                                  isExpanded: _isExpanded2,
+                                ),
+                              ],
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blueGrey,
+                              ),
+                              onPressed: () {
+                                _searchRumah();
+                                _formKey.currentState!.save();
+                                print(_listDataRumah2);
+                              },
+                              child: const Text("Search"),
+                            ),
+                          ],
+                        )),
                     // FOR CHECKING DATA
                     // Text(
                     //   'Image URL: ${_listDataRumah[1]['img_tr']}',
@@ -114,268 +480,6 @@ class _PageRumahState extends State<PageRumah> {
                     // Text('Option 1: ${widget.option1.toString()}'),
                     // Text('Option 2: ${widget.option2.toString()}'),
                     // Text('Option 3: ${widget.option3.toString()}'),
-                    ExpansionPanelList(
-                      elevation: 0,
-                      expandedHeaderPadding: EdgeInsets.zero,
-                      expansionCallback: (int index, bool isExpanded) {
-                        setState(() {
-                          _isExpanded = !_isExpanded;
-                        });
-                      },
-                      children: [
-                        ExpansionPanel(
-                          headerBuilder:
-                              (BuildContext context, bool isExpanded) {
-                            return ListTile(
-                              title: Text('Basic Search'),
-                            );
-                          },
-                          body: Column(
-                            children: [
-                              Text("Projek"),
-                              CheckboxListTile(
-                                title: Text('Greenland'),
-                                value: _selectedProjek == 'Greenland',
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    _checkedProjek =
-                                        _selectedProjek == 'Greenland'
-                                            ? null
-                                            : 'Greenland';
-                                  });
-                                },
-                              ),
-                              CheckboxListTile(
-                                title: Text('Kalm'),
-                                value: kalmSelected,
-                                onChanged: (bool? value) {
-                                  if (kalmSelected == false) {
-                                    kalmSelected = true;
-                                  } else {
-                                    kalmSelected = false;
-                                  }
-                                  setState(() {});
-                                },
-                              ),
-                              Slider(
-                                value: _sliderValue2.toDouble(),
-                                min: 0,
-                                max: 10000000000,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderValue2 = value.toInt();
-                                  });
-                                },
-                              ),
-                              Text(
-                                  'Harga: ${formatToRupiah(_sliderValue2.toString())}'),
-                              Slider(
-                                value: _sliderValue3.toDouble(),
-                                min: 0,
-                                max: 20,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderValue3 = value.toInt();
-                                  });
-                                },
-                              ),
-                              Text('Jumlah Kamar Tidur: $_sliderValue3'),
-                              Slider(
-                                value: _sliderValue4.toDouble(),
-                                min: 0,
-                                max: 20,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderValue4 = value.toInt();
-                                  });
-                                },
-                              ),
-                              Text('Jumlah Kamar Mandi: $_sliderValue4'),
-                              Slider(
-                                value: _sliderValue.toDouble(),
-                                min: 0,
-                                max: 500,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderValue = value.toInt();
-                                  });
-                                },
-                              ),
-                              Text('Luas Tanah: $_sliderValue  m²'),
-                              Slider(
-                                value: _sliderValue5.toDouble(),
-                                min: 0,
-                                max: 500,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderValue5 = value.toInt();
-                                  });
-                                },
-                              ),
-                              Text('Luas Bangunan: $_sliderValue5  m²'),
-                            ],
-                          ),
-                          isExpanded: _isExpanded,
-                        ),
-                      ],
-                    ),
-                    ExpansionPanelList(
-                      elevation: 0,
-                      expandedHeaderPadding: EdgeInsets.zero,
-                      expansionCallback: (int index, bool isExpanded2) {
-                        setState(() {
-                          _isExpanded2 = !_isExpanded2;
-                        });
-                      },
-                      children: [
-                        ExpansionPanel(
-                          headerBuilder:
-                              (BuildContext context, bool isExpanded2) {
-                            return ListTile(
-                              title: Text('Detail Rumah'),
-                            );
-                          },
-                          body: Column(
-                            children: [
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Pondasi',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Struktur',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Dinding Dalam',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Dinding Luar',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Dinding Kamar Mandi',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Meja Dapur',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Luas Ruang Tidur',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Luas Ruang Keluarga',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Luas Kamar Mandi Utama',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Luas Teras Utama',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Rangka Atap',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Penutup Atap',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Kusen',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Daun Pintu',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Sanitary',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Plafon Dalam',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Handle',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Lighting',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Daya Listrik',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Carport',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: 'Tangga',
-                                ),
-                                onChanged: (value) {},
-                              ),
-                            ],
-                          ),
-                          isExpanded: _isExpanded2,
-                        ),
-                      ],
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueGrey,
-                      ),
-                      onPressed: () {},
-                      child: const Text("Search"),
-                    ),
                   ],
                 ),
               ),

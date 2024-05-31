@@ -13,14 +13,14 @@ class PageDetailRumah extends StatefulWidget {
 
 class _PageDetailRumahState extends State<PageDetailRumah> {
   bool _isSidebarVisible = true;
-  List<dynamic> _dataDetailTipe = [];
+  Map<String, dynamic> _dataDetailTipe = {};
 
   Future<void> fetchDataDetailTipe() async {
     final response = await http.get(Uri.parse(
         'https://formsliving.com/api/getDetailRumah/${widget.index}'));
     if (response.statusCode == 200) {
       setState(() {
-        _dataDetailTipe = List<dynamic>.from(jsonDecode(response.body));
+        _dataDetailTipe = Map<String, dynamic>.from(jsonDecode(response.body));
       });
     } else {
       throw Exception('Failed to load data');
@@ -28,12 +28,15 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
   }
 
 
+
   @override
   void initState() {
     super.initState();
     fetchDataDetailTipe();
+    print('index tipe rumah : ${widget.index}');
+    
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -81,44 +84,30 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
                       ),
                       Text('Page Rumah'),
                       Text('Fetched Projek: ${_dataDetailTipe.toString()}'),
+                      
                     ],
+                    
                   ),
-                  FutureBuilder(
-                    future: fetchDataDetailTipe(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        final data = snapshot.data;
-                        return Column(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: 600,
-                              padding: EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              // child: Image.network(),
-                            ),
-                            Container(
-                              child: Row(
-                                children: [
-                                  Icon(Icons.bathtub),
-                                  // Text('Bath: ${_dataDetailTipe['kmr_mandi_tr']}'),
-                                  SizedBox(width: 10),
-                                  Icon(Icons.hotel),
-                                  // Text('Room: ${_dataDetailTipe['kmr_tidur_tr']}'),
-                                ],
-                              ),
-                            ),
-                          ],
-                        );
-                      }
-                    },
-                  ),
+                  
+                  Text("Kamar:  ${_dataDetailTipe['kmr_mandi_tr']}")  ,
+                // FutureBuilder(
+                //   future: fetchDataDetailTipe(),
+                //   builder: (context, snapshot) {
+                //     if (snapshot.connectionState == ConnectionState.waiting) {
+                //       return CircularProgressIndicator();
+                //     } else if (snapshot.hasError) {
+                //       return Text('Error: ${snapshot.error}');
+                //     } else {
+                //       return Column(
+                //         children: [
+                //           Text('Data loaded successfully'),
+                //           Text('Kamar Mandi: ${_dataDetailTipe['kmr_mandi_tr']}'),
+                //           Text('Kamar Tidur: ${_dataDetailTipe['kmr_tidur_tr']}'),
+                //         ],
+                //       );
+                //     }
+                //   },
+                // )
                 ],
               ),
             ),
