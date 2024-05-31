@@ -92,6 +92,8 @@ class _PageRumahState extends State<PageRumah> {
     String url =
         'https://formsliving.com/api/searchRumah/advanced/$querySearchParameters';
     try {
+      print('url: $url ');
+      print('deni elek');
       http.Response response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         setState(() {
