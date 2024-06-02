@@ -79,27 +79,45 @@ class _PageRumahState extends State<PageRumah> {
   }
 
   void _searchRumah() async {
-    final querySearchParameters = {
-      if (_selectedProjek.isNotEmpty) 'projek[]': _selectedProjek,
-      if (_sliderMulaiHarga != null) 'min_harga': _sliderMulaiHarga,
-      if (_sliderSelesaiHarga != null) 'max_harga': _sliderSelesaiHarga,
-      if (_sliderJmlKmrTidur != null) 'jml_kmr_tidur': _sliderJmlKmrTidur,
-      if (_sliderJmlKmrMandi != null) 'jml_kmr_mandi': _sliderJmlKmrMandi,
-      if (_sliderLuasTanah != null) 'luas_tanah': _sliderLuasTanah,
-      if (_sliderLuasBangunan != null) 'luas_bangunan': _sliderLuasBangunan,
-    };
-
+    final querySearchParameters = [];
+    if (_selectedProjek.isNotEmpty) {
+      querySearchParameters.add({'projek':_selectedProjek.toString()});
+    }
+    if (_sliderMulaiHarga != null) {
+      querySearchParameters.add({'&min_harga':_sliderMulaiHarga});
+    }
+    if (_sliderSelesaiHarga != null) {
+      querySearchParameters.add({'&max_harga':_sliderSelesaiHarga});
+    }
+    if (_sliderJmlKmrTidur != null && _sliderJmlKmrTidur != 0) {
+      querySearchParameters.add({'&jml_kmr_tidur':_sliderJmlKmrTidur});
+    }
+    if (_sliderJmlKmrMandi != null && _sliderJmlKmrMandi != 0) {
+      querySearchParameters.add({'&jml_kmr_mandi':_sliderJmlKmrMandi});
+    }
+    if (_sliderLuasTanah != null && _sliderLuasTanah != 0) {
+      querySearchParameters.add({'&luas_tanah':_sliderLuasTanah});
+    }
+    if (_sliderLuasBangunan != null && _sliderLuasBangunan != 0) {
+      querySearchParameters.add({'&luas_bangunan':_sliderLuasBangunan});
+    }
+    // [{projek: [Greenland]}, {min_harga: 0}, {max_harga: 0}, {jml_kmr_tidur: 0}, {jml_kmr_mandi: 0}, {luas_tanah: 0}, {luas_bangunan: 0}] 
+    String queryParameters = querySearchParameters.toString();
+    queryParameters = queryParameters.replaceAll('[', '').replaceAll(']', '').replaceAll('{', '').replaceAll('}', '').replaceAll(':', '=').replaceAll(' ', '').replaceAll(',', '');
+    // ?projek=Greenland&min_harga=10000000&max_harga=2000000000000
+    print('url: $queryParameters');
     String url =
-        'https://formsliving.com/api/searchRumah/advanced/$querySearchParameters';
+        'https://formsliving.com/api/searchRumah/advanced/?$queryParameters';
     try {
       print('url: $url ');
-      print('deni elek');
+     
       http.Response response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         setState(() {
           _listDataRumah2 =
               List<Map<String, dynamic>>.from(jsonDecode(response.body));
         });
+        print('LIST DATA RUMAH 2 : ${_listDataRumah2.toString()}');
       } else {
         throw Exception('Failed to load data');
       }
@@ -201,7 +219,7 @@ class _PageRumahState extends State<PageRumah> {
                                               print(_selectedProjek);
                                               setState(() {});
                                               OnSaved:
-                                              (value) => _selectedProjek;
+                                              (value) => _selectedProjek.toString();
                                               print(
                                                   "Value Selected Projek $_selectedProjek");
                                             },
