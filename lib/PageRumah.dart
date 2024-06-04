@@ -32,6 +32,25 @@ class _PageRumahState extends State<PageRumah> {
   int _sliderJmlKmrTidur = 0; // Add this line
   int _sliderLuasBangunan = 0; // Add this line
   int _sliderLuasTanah = 0; // Add this line
+  String _pondasiInput = "",
+      _strukturInput = "",
+      _dindingDalamInput = "",
+      _dindingLuarKamarMandiInput = "",
+      _mejaDapurInput = "",
+      _luasRuangTidurInput = "",
+      _luasRuangKeluargaInput = "",
+      _luasTerasUtamaInput = "",
+      _rangkaAtapInput = "",
+      _penutupAtapInput = "",
+      _kusenInput = "",
+      _daunPintuInput = "",
+      _sanitaryInput = "",
+      _plafonDalamInput = "",
+      _handleInput = "",
+      _lightingInput = "",
+      _dayaListrikInput = "",
+      _carportInput = "",
+      _tanggaInput = "";
   final _formKey = GlobalKey<FormState>();
 
   List<Map<String, dynamic>> _listDataRumah = [];
@@ -81,40 +100,47 @@ class _PageRumahState extends State<PageRumah> {
   void _searchRumah() async {
     final querySearchParameters = [];
     if (_selectedProjek.isNotEmpty) {
-      querySearchParameters.add({'projek':_selectedProjek.toString()});
+      querySearchParameters.add({'projek': _selectedProjek.toString()});
     }
     if (_sliderMulaiHarga != null) {
-      querySearchParameters.add({'&min_harga':_sliderMulaiHarga});
+      querySearchParameters.add({'&min_harga': _sliderMulaiHarga});
     }
     if (_sliderSelesaiHarga != null) {
-      querySearchParameters.add({'&max_harga':_sliderSelesaiHarga});
+      querySearchParameters.add({'&max_harga': _sliderSelesaiHarga});
     }
     if (_sliderJmlKmrTidur != null && _sliderJmlKmrTidur != 0) {
-      querySearchParameters.add({'&jml_kmr_tidur':_sliderJmlKmrTidur});
+      querySearchParameters.add({'&jml_kmr_tidur': _sliderJmlKmrTidur});
     }
     if (_sliderJmlKmrMandi != null && _sliderJmlKmrMandi != 0) {
-      querySearchParameters.add({'&jml_kmr_mandi':_sliderJmlKmrMandi});
+      querySearchParameters.add({'&jml_kmr_mandi': _sliderJmlKmrMandi});
     }
     if (_sliderLuasTanah != null && _sliderLuasTanah != 0) {
-      querySearchParameters.add({'&luas_tanah':_sliderLuasTanah});
+      querySearchParameters.add({'&luas_tanah': _sliderLuasTanah});
     }
     if (_sliderLuasBangunan != null && _sliderLuasBangunan != 0) {
-      querySearchParameters.add({'&luas_bangunan':_sliderLuasBangunan});
+      querySearchParameters.add({'&luas_bangunan': _sliderLuasBangunan});
     }
-    // [{projek: [Greenland]}, {min_harga: 0}, {max_harga: 0}, {jml_kmr_tidur: 0}, {jml_kmr_mandi: 0}, {luas_tanah: 0}, {luas_bangunan: 0}] 
+    // [{projek: [Greenland]}, {min_harga: 0}, {max_harga: 0}, {jml_kmr_tidur: 0}, {jml_kmr_mandi: 0}, {luas_tanah: 0}, {luas_bangunan: 0}]
     String queryParameters = querySearchParameters.toString();
-    queryParameters = queryParameters.replaceAll('[', '').replaceAll(']', '').replaceAll('{', '').replaceAll('}', '').replaceAll(':', '=').replaceAll(' ', '').replaceAll(',', '');
+    queryParameters = queryParameters
+        .replaceAll('[', '')
+        .replaceAll(']', '')
+        .replaceAll('{', '')
+        .replaceAll('}', '')
+        .replaceAll(':', '=')
+        .replaceAll(' ', '')
+        .replaceAll(',', '');
     // ?projek=Greenland&min_harga=10000000&max_harga=2000000000000
     print('url: $queryParameters');
     String url =
         'https://formsliving.com/api/searchRumah/advanced/?$queryParameters';
     try {
       print('url: $url ');
-     
+
       http.Response response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         setState(() {
-          _listDataRumah2 =
+          _listDataRumah =
               List<Map<String, dynamic>>.from(jsonDecode(response.body));
         });
         print('LIST DATA RUMAH 2 : ${_listDataRumah2.toString()}');
@@ -125,6 +151,53 @@ class _PageRumahState extends State<PageRumah> {
       print('Error fetching data: $e');
     }
   }
+
+//   void _searchRumah() async {
+//   final Map<String, dynamic> querySearchParameters = {};
+
+//   if (_selectedProjek.isNotEmpty) {
+//     querySearchParameters['projek'] = _selectedProjek.toString();
+//   }
+//   if (_sliderMulaiHarga != null) {
+//     querySearchParameters['min_harga'] = _sliderMulaiHarga.toString();
+//   }
+//   if (_sliderSelesaiHarga != null) {
+//     querySearchParameters['max_harga'] = _sliderSelesaiHarga.toString();
+//   }
+//   if (_sliderJmlKmrTidur != null && _sliderJmlKmrTidur != 0) {
+//     querySearchParameters['jml_kmr_tidur'] = _sliderJmlKmrTidur.toString();
+//   }
+//   if (_sliderJmlKmrMandi != null && _sliderJmlKmrMandi != 0) {
+//     querySearchParameters['jml_kmr_mandi'] = _sliderJmlKmrMandi.toString();
+//   }
+//   if (_sliderLuasTanah != null && _sliderLuasTanah != 0) {
+//     querySearchParameters['luas_tanah'] = _sliderLuasTanah.toString();
+//   }
+//   if (_sliderLuasBangunan != null && _sliderLuasBangunan != 0) {
+//     querySearchParameters['luas_bangunan'] = _sliderLuasBangunan.toString();
+//   }
+
+//   // Construct the query string
+//   final queryString = Uri(queryParameters: querySearchParameters).query;
+
+//   String url = 'https://formsliving.com/api/searchRumah/advanced/?$queryString';
+
+//   try {
+//     print('url: $url ');
+//     http.Response response = await http.get(Uri.parse(url));
+//     if (response.statusCode == 200) {
+//       setState(() {
+//         _listDataRumah2 =
+//             List<Map<String, dynamic>>.from(jsonDecode(response.body));
+//       });
+//       print('LIST DATA RUMAH 2 : ${_listDataRumah2.toString()}');
+//     } else {
+//       throw Exception('Failed to load data');
+//     }
+//   } catch (e) {
+//     print('Error fetching data: $e');
+//   }
+// }
 
   @override
   void initState() {
@@ -219,7 +292,8 @@ class _PageRumahState extends State<PageRumah> {
                                               print(_selectedProjek);
                                               setState(() {});
                                               OnSaved:
-                                              (value) => _selectedProjek.toString();
+                                              (value) =>
+                                                  _selectedProjek.toString();
                                               print(
                                                   "Value Selected Projek $_selectedProjek");
                                             },
