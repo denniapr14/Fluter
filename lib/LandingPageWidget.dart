@@ -40,6 +40,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
   }
 
   void _sendDataToAPI() async {
+    print("object");
     final url =
         'https://formsliving.com/api/getRumah/$_selectedOption1/$_selectedOption2/$_selectedOption3';
     final response = await http.get(Uri.parse(url));

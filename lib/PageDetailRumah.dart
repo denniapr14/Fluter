@@ -3,6 +3,7 @@ import 'dart:math'; // Import the dart:math library
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart'; // Import the intl package
+import 'package:url_launcher/url_launcher.dart';
 
 class PageDetailRumah extends StatefulWidget {
   final int index;
@@ -119,10 +120,14 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
               child: Visibility(
                 visible: _isSidebarVisible,
                 child: ListView(
-                  children: 
-                  [
-                    
+                  children: [
                     ListTile(
+                      leading: IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
                       title: Text('Simulasi KPR'),
                     ),
                     TextField(
@@ -161,8 +166,7 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
                       child: const Text("Hitung Simulasi KPR"),
                     ),
                     SizedBox(height: 20),
-                    if (_monthlyPayment >
-                        0) // Show results only after calculation
+                    if (_monthlyPayment > 0)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -185,111 +189,128 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
                   ],
                 ),
               ),
-              
             ),
             Expanded(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon:
-                            Icon(_isSidebarVisible ? Icons.close : Icons.menu),
-                        onPressed: () {
-                          setState(() {
-                            _isSidebarVisible = !_isSidebarVisible;
-                          });
-                        },
-                      ),
-                      Text("${_dataDetailTipe['nama_cluster'].toString()} / ${_dataDetailTipe['blok'].toString()} - ${_dataDetailTipe['nomor'].toString()}"),
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(16.0),
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: Image.network(
-                        'https://d3p0bla3numw14.cloudfront.net/news-content/img/2022/05/29052121/Desain-Rumah-Perumahan-Type-36.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  // Text below the image
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Tipe : ${_dataDetailTipe['jenis_tr'].toString()}',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  // Icons for bath and room
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Icon(Icons.bathtub, size: 24.0),
-                        Text(_dataDetailTipe['kmr_mandi_tr'].toString()),
-                        SizedBox(width: 16.0),
-                        Icon(Icons.bedroom_parent, size: 24.0),
-                        Text(_dataDetailTipe['kmr_tidur_tr'].toString()),
+                        IconButton(
+                          icon: Icon(
+                              _isSidebarVisible ? Icons.close : Icons.menu),
+                          onPressed: () {
+                            setState(() {
+                              _isSidebarVisible = !_isSidebarVisible;
+                            });
+                          },
+                        ),
+                        Text(
+                            "${_dataDetailTipe['nama_cluster'].toString()} / ${_dataDetailTipe['blok'].toString()} - ${_dataDetailTipe['nomor'].toString()}"),
                       ],
                     ),
-                  ),
-                  // Tabs for Denah, Spesifikasi
-                  DefaultTabController(
-                    length: 3,
-                    child: Column(
-                      children: [
-                        TabBar(
-                          labelColor: Colors.black,
-                          tabs: [
-                            Tab(text: 'Denah'),
-                            Tab(text: 'Spesifikasi'),
-                            Tab(text: 'Lainnya'),
-                          ],
+                    Container(
+                      margin: EdgeInsets.all(16.0),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Image.network(
+                          'https://formsliving.com/Home/images/tipe/${_dataDetailTipe['img_tr']}',
+                          fit: BoxFit.cover,
                         ),
-                        Container(
-                          height: 700.0, // Height of the TabBarView
-                          child: TabBarView(
-                            children: [
-                              Center(child: Text('Denah Content')),
-                              Center(
-                                child: Table(
-                                  border: TableBorder.all(
-                                      color: Colors.transparent),
-                                  children: specifications.entries.map((entry) {
-                                    return TableRow(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            entry.key,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(entry.value),
-                                        ),
-                                      ],
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                              Center(child: Text('Lainnya Content')),
+                      ),
+                    ),
+                    // Text below the image
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Tipe : ${_dataDetailTipe['jenis_tr'].toString()}',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    // Icons for bath and room
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.bathtub, size: 24.0),
+                          Text(_dataDetailTipe['kmr_mandi_tr'].toString()),
+                          SizedBox(width: 16.0),
+                          Icon(Icons.bedroom_parent, size: 24.0),
+                          Text(_dataDetailTipe['kmr_tidur_tr'].toString()),
+                        ],
+                      ),
+                    ),
+                    // Tabs for Denah, Spesifikasi
+                    DefaultTabController(
+                      length: 3,
+                      child: Column(
+                        children: [
+                          TabBar(
+                            labelColor: Colors.black,
+                            tabs: [
+                              Tab(text: 'Denah'),
+                              Tab(text: 'Spesifikasi'),
+                              Tab(text: 'Lainnya'),
                             ],
                           ),
-                        ),
-                      ],
+                          Container(
+                            height: 700.0, // Height of the TabBarView
+                            child: TabBarView(
+                              children: [
+                                Center(child: Text('Denah Content')),
+                                Center(
+                                  child: Table(
+                                    border: TableBorder.all(
+                                        color: Colors.transparent),
+                                    children:
+                                        specifications.entries.map((entry) {
+                                      return TableRow(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              entry.key,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(entry.value),
+                                          ),
+                                        ],
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                                Center(child: Text('Lainnya Content')),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                   Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: Container(
+                  width: 300.0,
+                  child: FloatingActionButton.extended(
+                    onPressed: _launchURL,
+                    label: Text("Beli Sekarang!"),
+                    backgroundColor: Colors.blue,
                   ),
-                ],
+                ),
+              ),
+              ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -299,6 +320,15 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
   }
 }
 
+
+  void _launchURL() async {
+    const url = 'https://shopee.co.id/kaito.corner#product_list';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 void main() {
   runApp(PageDetailRumah(index: 1));
 }
