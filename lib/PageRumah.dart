@@ -184,6 +184,7 @@ class _PageRumahState extends State<PageRumah> {
     if (_tanggaInput.isNotEmpty) {
       querySearchParameters.add({'&tangga': _tanggaInput});
     }
+    
     // [{projek: [Greenland]}, {min_harga: 0}, {max_harga: 0}, {jml_kmr_tidur: 0}, {jml_kmr_mandi: 0}, {luas_tanah: 0}, {luas_bangunan: 0}]
     String queryParameters = querySearchParameters.toString();
     queryParameters = queryParameters
