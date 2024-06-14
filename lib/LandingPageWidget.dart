@@ -88,12 +88,12 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
               children: [
                 Text(
                   'Find Your Dream Home',
-                  style: TextStyle(fontSize: 24, color: AppColors.color3),
+                  style: TextStyle(fontSize: 24, color: Colors.white),
                 ),
                 SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
-                    color: AppColors.color2,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(40),
                   ),
                   width: 700,
@@ -152,8 +152,8 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
                       ElevatedButton(
                         onPressed: _sendDataToAPI,
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: AppColors.color4,
-                          backgroundColor: AppColors.color5,
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.black,
                         ),
                         child: Text('Search'),
                       ),

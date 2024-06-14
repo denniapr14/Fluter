@@ -71,3 +71,9 @@ class AppColors {
   static const Color color5 = Color(0xFFFFEF5A);
   static const Color color6 = Color(0xFFFFEC31);
 }
+
+class GlobalThemeData {
+  static ThemeData themeData(ColorScheme colorScheme, Color focusColor) {
+    return ThemeData(colorScheme: colorScheme, focusColor: focusColor);
+  }
+}

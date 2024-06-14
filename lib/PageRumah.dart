@@ -310,9 +310,8 @@ class _PageRumahState extends State<PageRumah> {
                       ),
                       title: Text(''),
                     ),
-                    Container(
-                      color: AppColors.color1,
-                      child:  Form(
+
+                    Form(
                         key: _formKey,
                         child: Column(
                           children: [
@@ -369,88 +368,107 @@ class _PageRumahState extends State<PageRumah> {
                             // ),
                             Text(
                                 'Starting Price: ${formatToRupiah(_sliderMulaiHarga.toString())}'),
-                            Slider(
-                              value: _sliderMulaiHarga.toDouble(),
-                              min: 0,
-                              max: 100000000,
-                              onChanged: (double value) {
-                                setState(() {
-                                  _sliderMulaiHarga = value.toInt();
-                                });
-                                OnSaved:
-                                (value) => _sliderMulaiHarga;
-                              },
+                            Container(
+                              width: 350,
+                              child: Slider(
+                                value: _sliderMulaiHarga.toDouble(),
+                                min: 0,
+                                max: 100000000,
+                                onChanged: (double value) {
+                                  setState(() {
+                                    _sliderMulaiHarga = value.toInt();
+                                  });
+                                  OnSaved:
+                                  (value) => _sliderMulaiHarga;
+                                },
+                              ),
                             ),
-                            SizedBox(height: 16),
+
+                            SizedBox(height: 20),
                             Text(
                                 'Up to Price: ${formatToRupiah(_sliderSelesaiHarga.toString())}'),
-                            Slider(
-                              value: _sliderSelesaiHarga.toDouble(),
-                              min: 0,
-                              max: 100000000000,
-                              onChanged: (double value) {
-                                setState(() {
-                                  _sliderSelesaiHarga = value.toInt();
-                                });
-                                OnSaved:
-                                (value) => _sliderSelesaiHarga;
-                              },
+                            Container(
+                              width: 350,
+                              child: Slider(
+                                value: _sliderSelesaiHarga.toDouble(),
+                                min: 0,
+                                max: 100000000000,
+                                onChanged: (double value) {
+                                  setState(() {
+                                    _sliderSelesaiHarga = value.toInt();
+                                  });
+                                  OnSaved:
+                                  (value) => _sliderSelesaiHarga;
+                                },
+                              ),
                             ),
-                            SizedBox(height: 16),
+                            SizedBox(height: 20),
                             Text('Number of Bedrooms: $_sliderJmlKmrTidur'),
-                            Slider(
-                              value: _sliderJmlKmrTidur.toDouble(),
-                              min: 0,
-                              max: 20,
-                              onChanged: (double value) {
-                                setState(() {
-                                  _sliderJmlKmrTidur = value.toInt();
-                                });
-                                OnSaved:
-                                (value) => _sliderJmlKmrTidur;
-                              },
+                            Container(
+                              width: 350,
+                              child: Slider(
+                                value: _sliderJmlKmrTidur.toDouble(),
+                                min: 0,
+                                max: 20,
+                                onChanged: (double value) {
+                                  setState(() {
+                                    _sliderJmlKmrTidur = value.toInt();
+                                  });
+                                  OnSaved:
+                                  (value) => _sliderJmlKmrTidur;
+                                },
+                              ),
                             ),
-                            SizedBox(height: 16),
+                            SizedBox(height: 20),
                             Text('Number of Bathrooms: $_sliderJmlKmrMandi'),
-                            Slider(
-                              value: _sliderJmlKmrMandi.toDouble(),
-                              min: 0,
-                              max: 20,
-                              onChanged: (double value) {
-                                setState(() {
-                                  _sliderJmlKmrMandi = value.toInt();
-                                });
-                                OnSaved:
-                                (value) => _sliderJmlKmrMandi;
-                              },
+                            Container(
+                              width: 350,
+                              child: Slider(
+                                value: _sliderJmlKmrMandi.toDouble(),
+                                min: 0,
+                                max: 20,
+                                onChanged: (double value) {
+                                  setState(() {
+                                    _sliderJmlKmrMandi = value.toInt();
+                                  });
+                                  OnSaved:
+                                  (value) => _sliderJmlKmrMandi;
+                                },
+                              ),
                             ),
-                            SizedBox(height: 16),
+                            SizedBox(height: 20),
                             Text('Surface area: $_sliderLuasTanah  m²'),
-                            Slider(
-                              value: _sliderLuasTanah.toDouble(),
-                              min: 0,
-                              max: 500,
-                              onChanged: (double value) {
-                                setState(() {
-                                  _sliderLuasTanah = value.toInt();
-                                });
-                                OnSaved:
-                                (value) => _sliderLuasTanah;
-                              },
+                            Container(
+                              width: 350,
+                              child: Slider(
+                                value: _sliderLuasTanah.toDouble(),
+                                min: 0,
+                                max: 500,
+                                onChanged: (double value) {
+                                  setState(() {
+                                    _sliderLuasTanah = value.toInt();
+                                  });
+                                  OnSaved:
+                                  (value) => _sliderLuasTanah;
+                                },
+                              ),
                             ),
-                            SizedBox(height: 16),
+                            SizedBox(height: 20),
                             Text('Building area: $_sliderLuasBangunan  m²'),
-                            Slider(
-                              value: _sliderLuasBangunan.toDouble(),
-                              min: 0,
-                              max: 500,
-                              onChanged: (double value) {
-                                setState(() {
-                                  _sliderLuasBangunan = value.toInt();
-                                });
-                                OnSaved:
-                                (value) => _sliderLuasBangunan;
-                              },
+                            Container(
+                              width: 350,
+                              child: Slider(
+                                value: _sliderLuasBangunan.toDouble(),
+                                min: 0,
+                                max: 500,
+                                onChanged: (double value) {
+                                  setState(() {
+                                    _sliderLuasBangunan = value.toInt();
+                                  });
+                                  OnSaved:
+                                  (value) => _sliderLuasBangunan;
+                                },
+                              ),
                             ),
 
                             ExpansionPanelList(
@@ -493,7 +511,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _pondasiInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Struktur',
@@ -513,7 +531,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _strukturInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Dinding Dalam',
@@ -537,7 +555,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Dinding Luar',
@@ -560,7 +578,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _dindingLuarInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Dinding Kamar Mandi',
@@ -590,7 +608,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Meja Dapur',
@@ -614,7 +632,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _mejaDapurInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lantai Ruang Tidur',
@@ -640,7 +658,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lantai Ruang Keluarga',
@@ -666,7 +684,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText:
@@ -687,7 +705,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lantai Teras Utama',
@@ -712,7 +730,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Rangka Atap',
@@ -733,7 +751,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _rangkaAtapInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Penutup Atap',
@@ -754,7 +772,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _penutupAtapInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           isExpanded: true,
                                           decoration: InputDecoration(
@@ -786,7 +804,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _kusenInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           isExpanded: true,
                                           decoration: InputDecoration(
@@ -816,7 +834,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _daunPintuInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           isExpanded: true,
                                           decoration: InputDecoration(
@@ -849,7 +867,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _sanitaryInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Plafon Dalam',
@@ -870,7 +888,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _plafonDalamInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Handle',
@@ -897,7 +915,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _handleInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lighting',
@@ -919,7 +937,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _lightingInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Daya Listrik',
@@ -947,7 +965,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _dayaListrikInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Carport',
@@ -975,7 +993,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _carportInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 16),
+                                        SizedBox(height: 20),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Tangga',
@@ -1017,8 +1035,6 @@ class _PageRumahState extends State<PageRumah> {
                             ),
                           ],
                         )),
-                    ),
-                   
                     // FOR CHECKING DATA
                     // Text(
                     //   'Image URL: ${_listDataRumah[1]['img_tr']}',
@@ -1121,41 +1137,69 @@ class _PageRumahState extends State<PageRumah> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceEvenly,
                                             children: [
-                                              Icon(Icons.bathtub,
-                                                  color: Colors.white),
-                                              Text(
-                                                '${data['kmr_mandi_tr']}',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                ),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.bathtub,
+                                                      color: Colors.white),
+                                                  SizedBox(
+                                                      width:
+                                                          4), // Space between icon and text
+                                                  Text(
+                                                    '${data['kmr_mandi_tr']}',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              Icon(Icons.bed,
-                                                  color: Colors.white),
-                                              Text(
-                                                '${data['kmr_tidur_tr']}',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                ),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.bed,
+                                                      color: Colors.white),
+                                                  SizedBox(
+                                                      width:
+                                                          4), // Space between icon and text
+                                                  Text(
+                                                    '${data['kmr_tidur_tr']}',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              Icon(Icons.house,
-                                                  color: Colors.white),
-                                              Text(
-                                                '${data['luas_bangunan_tr']} m²',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                ),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.house,
+                                                      color: Colors.white),
+                                                  SizedBox(
+                                                      width:
+                                                          4), // Space between icon and text
+                                                  Text(
+                                                    '${data['luas_bangunan_tr']} m²',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              Icon(Icons.terrain,
-                                                  color: Colors.white),
-                                              Text(
-                                                '${data['luas_tanah']} m²',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                ),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.terrain,
+                                                      color: Colors.white),
+                                                  SizedBox(
+                                                      width:
+                                                          4), // Space between icon and text
+                                                  Text(
+                                                    '${data['luas_tanah']} m²',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
