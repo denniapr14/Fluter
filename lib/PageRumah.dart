@@ -292,779 +292,111 @@ class _PageRumahState extends State<PageRumah> {
     return MaterialApp(
       theme: ThemeData.dark(),
       home: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              SizedBox(
+                  width: 8), // Add some space between the icon and the text
+              Text(''),
+            ],
+          ),
+        ),
         body: Row(
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              width: _isSidebarVisible ? 400 : 0,
+              width: _isSidebarVisible ? 400 : 50,
               child: Visibility(
                 visible: _isSidebarVisible,
                 child: ListView(
                   children: [
-                    ListTile(
-                      leading: IconButton(
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      title: Text(''),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Spacer(),
+                        IconButton(
+                          icon: Icon(
+                            _isSidebarVisible ? Icons.close : Icons.menu,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isSidebarVisible = !_isSidebarVisible;
+                            });
+                          },
+                        ),
+                        Text(''),
+                      ],
                     ),
-
                     Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            Text("Project"),
-
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: _listDataProjekCheckbox.length,
-                              itemBuilder: (context, index) {
-                                // print( "DataRumah : $_listDataRumah");
-                                return CheckboxListTile(
-                                  title: Text(_listDataProjekCheckbox[index]
-                                      ['nama_projek']),
-                                  value: _selectedProjek.contains(
-                                      _listDataProjek[index]['nama_projek']),
-                                  onChanged: (bool? value) {
-                                    if (_listDataProjekCheckbox[index]
-                                            ['checked'] ==
-                                        false) {
-                                      _selectedProjek.add(
-                                          _listDataProjekCheckbox[index]
-                                              ['nama_projek']);
-                                      _listDataProjekCheckbox[index]
-                                          ['checked'] = true;
-                                    } else {
-                                      _selectedProjek.remove(
-                                          _listDataProjekCheckbox[index]
-                                              ['nama_projek']);
-                                      _listDataProjekCheckbox[index]
-                                          ['checked'] = false;
-                                    }
-                                    print(_selectedProjek);
-                                    setState(() {});
-                                    OnSaved:
-                                    (value) => _selectedProjek.toString();
-                                    print(
-                                        "Value Selected Projek $_selectedProjek");
-                                  },
-                                );
-                              },
-                            ),
-
-                            // CheckboxListTile(
-                            //   title: Text('Kalm'),
-                            //   value: kalmSelected,
-                            //   onChanged: (bool? value) {
-                            //     if (kalmSelected == false) {
-                            //       kalmSelected = true;
-                            //     } else {
-                            //       kalmSelected = false;
-                            //     }
-                            //     setState(() {});
-                            //   },
-                            // ),
-                            Text(
-                                'Starting Price: ${formatToRupiah(_sliderMulaiHarga.toString())}'),
-                            Container(
-                              width: 350,
-                              child: Slider(
-                                value: _sliderMulaiHarga.toDouble(),
-                                min: 0,
-                                max: 100000000,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderMulaiHarga = value.toInt();
-                                  });
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          Text("Project"),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _listDataProjekCheckbox.length,
+                            itemBuilder: (context, index) {
+                              // print( "DataRumah : $_listDataRumah");
+                              return CheckboxListTile(
+                                title: Text(_listDataProjekCheckbox[index]
+                                    ['nama_projek']),
+                                value: _selectedProjek.contains(
+                                    _listDataProjek[index]['nama_projek']),
+                                onChanged: (bool? value) {
+                                  if (_listDataProjekCheckbox[index]
+                                          ['checked'] ==
+                                      false) {
+                                    _selectedProjek.add(
+                                        _listDataProjekCheckbox[index]
+                                            ['nama_projek']);
+                                    _listDataProjekCheckbox[index]['checked'] =
+                                        true;
+                                  } else {
+                                    _selectedProjek.remove(
+                                        _listDataProjekCheckbox[index]
+                                            ['nama_projek']);
+                                    _listDataProjekCheckbox[index]['checked'] =
+                                        false;
+                                  }
+                                  print(_selectedProjek);
+                                  setState(() {});
                                   OnSaved:
-                                  (value) => _sliderMulaiHarga;
+                                  (value) => _selectedProjek.toString();
+                                  print(
+                                      "Value Selected Projek $_selectedProjek");
                                 },
-                              ),
-                            ),
-
-                            SizedBox(height: 22),
-                            Text(
-                                'Up to Price: ${formatToRupiah(_sliderSelesaiHarga.toString())}'),
-                            Container(
-                              width: 350,
-                              child: Slider(
-                                value: _sliderSelesaiHarga.toDouble(),
-                                min: 0,
-                                max: 100000000000,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderSelesaiHarga = value.toInt();
-                                  });
-                                  OnSaved:
-                                  (value) => _sliderSelesaiHarga;
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 22),
-                            Text('Number of Bedrooms: $_sliderJmlKmrTidur'),
-                            Container(
-                              width: 350,
-                              child: Slider(
-                                value: _sliderJmlKmrTidur.toDouble(),
-                                min: 0,
-                                max: 20,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderJmlKmrTidur = value.toInt();
-                                  });
-                                  OnSaved:
-                                  (value) => _sliderJmlKmrTidur;
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 22),
-                            Text('Number of Bathrooms: $_sliderJmlKmrMandi'),
-                            Container(
-                              width: 350,
-                              child: Slider(
-                                value: _sliderJmlKmrMandi.toDouble(),
-                                min: 0,
-                                max: 20,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderJmlKmrMandi = value.toInt();
-                                  });
-                                  OnSaved:
-                                  (value) => _sliderJmlKmrMandi;
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 22),
-                            Text('Surface area: $_sliderLuasTanah  m²'),
-                            Container(
-                              width: 350,
-                              child: Slider(
-                                value: _sliderLuasTanah.toDouble(),
-                                min: 0,
-                                max: 500,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderLuasTanah = value.toInt();
-                                  });
-                                  OnSaved:
-                                  (value) => _sliderLuasTanah;
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 22),
-                            Text('Building area: $_sliderLuasBangunan  m²'),
-                            Container(
-                              width: 350,
-                              child: Slider(
-                                value: _sliderLuasBangunan.toDouble(),
-                                min: 0,
-                                max: 500,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderLuasBangunan = value.toInt();
-                                  });
-                                  OnSaved:
-                                  (value) => _sliderLuasBangunan;
-                                },
-                              ),
-                            ),
-
-                            ExpansionPanelList(
-                              elevation: 0,
-                              expandedHeaderPadding: EdgeInsets.zero,
-                              expansionCallback: (int index, bool isExpanded2) {
-                                setState(() {
-                                  _isExpanded2 = !_isExpanded2;
-                                });
-                              },
-                              children: [
-                                ExpansionPanel(
-                                  headerBuilder:
-                                      (BuildContext context, bool isExpanded2) {
-                                    return ListTile(
-                                      title: Text('Advanced Search'),
-                                    );
-                                  },
-                                  body: SingleChildScrollView(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: Column(
-                                      children: [
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Pondasi',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Batu Kali'),
-                                                value: 'Batu Kali'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _pondasiInput = value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _pondasiInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Struktur',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Beton Bertulang'),
-                                                value: 'Beton Bertulang'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _strukturInput = value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _strukturInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Dinding Dalam',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text(
-                                                    'Pasangan batu finishing cat'),
-                                                value:
-                                                    'Pasangan batu finishing cat'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _dindingDalamInput =
-                                                  value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _dindingDalamInput =
-                                                value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Dinding Luar',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text(
-                                                    'Pasangan bata finishing cat'),
-                                                value:
-                                                    'Pasangan bata finishing cat'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _dindingLuarInput =
-                                                  value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _dindingLuarInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Dinding Kamar Mandi',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Keramik'),
-                                                value: 'Keramik'),
-                                            DropdownMenuItem(
-                                                child: Text(
-                                                    'Keramik (include tempat sabun tanam)'),
-                                                value:
-                                                    'Keramik (include tempat sabun tanam)'),
-                                            DropdownMenuItem(
-                                                child: Text('Keramik 40 x 40'),
-                                                value: 'Keramik 40 x 40'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _dindingKamarMandiInput =
-                                                  value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _dindingKamarMandiInput =
-                                                value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Meja Dapur',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Keramik'),
-                                                value: 'Keramik'),
-                                            DropdownMenuItem(
-                                                child:
-                                                    Text('Granitile 60 x 60'),
-                                                value: 'Granitile 60 x 60'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _mejaDapurInput = value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _mejaDapurInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Lantai Ruang Tidur',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Granitile'),
-                                                value: 'Granitile'),
-                                            DropdownMenuItem(
-                                                child:
-                                                    Text('Granitile 60 x 60'),
-                                                value: 'Granitile 60 x 60'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _lantaiRuangTidurInput =
-                                                  value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _lantaiRuangTidurInput =
-                                                value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Lantai Ruang Keluarga',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Granitile'),
-                                                value: 'Granitile'),
-                                            DropdownMenuItem(
-                                                child:
-                                                    Text('Granitile 60 x 60'),
-                                                value: 'Granitile 60 x 60'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _lantaiRuangKeluargaInput =
-                                                  value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _lantaiRuangKeluargaInput =
-                                                value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText:
-                                                'Dinding Kamar Mandi Utama',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Keramik'),
-                                                value: 'Keramik'),
-                                            DropdownMenuItem(
-                                                child: Text('Keramik 40 x 40'),
-                                                value: 'Keramik 40 x 40'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {},
-                                          onSaved: (value) {
-                                            _dindingKamarMandiInput =
-                                                value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Lantai Teras Utama',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Granitile'),
-                                                value: 'Granitile'),
-                                            DropdownMenuItem(
-                                                child: Text('Keramik 40 x 40'),
-                                                value: 'Keramik 40 x 40'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _lantaiTerasUtamaInput =
-                                                  value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _lantaiTerasUtamaInput =
-                                                value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Rangka Atap',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Galvalum'),
-                                                value: 'Galvalum'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _rangkaAtapInput =
-                                                  value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _rangkaAtapInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Penutup Atap',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Genteng M-Class'),
-                                                value: 'Genteng M-Class'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _penutupAtapInput =
-                                                  value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _penutupAtapInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          isExpanded: true,
-                                          decoration: InputDecoration(
-                                            labelText: 'Kusen',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Alumunium'),
-                                                value: 'Alumunium'),
-                                            DropdownMenuItem(
-                                                child: Text(
-                                                    'Kayu Finishing Lazur'),
-                                                value: 'Kayu Finishing Lazur'),
-                                            DropdownMenuItem(
-                                                child: Text(
-                                                    'Pintu Utama / Belakang Kusen Kayu Kamper / Ruang Lain Tanpa Kusen / Pintu Engsel Pivot',
-                                                    overflow:
-                                                        TextOverflow.ellipsis),
-                                                value:
-                                                    'Pintu Utama / Belakang Kusen Kayu Kamper / Ruang Lain Tanpa Kusen / Pintu Engsel Pivot'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _kusenInput = value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _kusenInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          isExpanded: true,
-                                          decoration: InputDecoration(
-                                            labelText: 'Daun Pintu',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text(
-                                                    'Double Multiplek Finishing Lazur'),
-                                                value:
-                                                    'Double Multiplek Finishing Lazur'),
-                                            DropdownMenuItem(
-                                                child: Text(
-                                                    'Pintu dobel multiplek fin hpl (depan), Bingkai alumunium isi kaca (belakang)',
-                                                    overflow:
-                                                        TextOverflow.ellipsis),
-                                                value:
-                                                    'Pintu dobel multiplek fin hpl (depan), Bingkai alumunium isi kaca (belakang)'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _daunPintuInput = value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _daunPintuInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          isExpanded: true,
-                                          decoration: InputDecoration(
-                                            labelText: 'Sanitary',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text(
-                                                    'Artisan - Counter top, Artisan - One piece closet, Artisan - Zink dan kran zink',
-                                                    overflow:
-                                                        TextOverflow.ellipsis),
-                                                value:
-                                                    'Artisan - Counter top, Artisan - One piece closet, Artisan - Zink dan kran zink'),
-                                            DropdownMenuItem(
-                                                child: Text(
-                                                    'America Standard & Onda / Setara'),
-                                                value:
-                                                    'America Standard & Onda / Setara'),
-                                            DropdownMenuItem(
-                                                child: Text('Artisan (black)'),
-                                                value: 'Artisan (black)'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _sanitaryInput = value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _sanitaryInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Plafon Dalam',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Gypsum'),
-                                                value: 'Gypsum'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _plafonDalamInput =
-                                                  value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _plafonDalamInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Handle',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text('Artisan'),
-                                                value: 'Artisan'),
-                                            DropdownMenuItem(
-                                                child: Text(
-                                                    'Artisan (Matte Black)'),
-                                                value: 'Artisan (Matte Black)'),
-                                            DropdownMenuItem(
-                                                child: Text('ELT / Setara'),
-                                                value: 'ELT / Setara'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _handleInput = value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _handleInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Lighting',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child: Text(
-                                                    'Direct dan Indirect Technique'),
-                                                value:
-                                                    'Direct dan Indirect Technique'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _lightingInput = value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _lightingInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Daya Listrik',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child:
-                                                    Text('1300 VA / 2200 VA'),
-                                                value: '1300 VA / 2200 VA'),
-                                            DropdownMenuItem(
-                                                child: Text('2200 VA'),
-                                                value: '2200 VA'),
-                                            DropdownMenuItem(
-                                                child: Text('1300 VA'),
-                                                value: '1300 VA'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _dayaListrikInput =
-                                                  value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _dayaListrikInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Carport',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child:
-                                                    Text('White Coral stone'),
-                                                value: 'White Coral stone'),
-                                            DropdownMenuItem(
-                                                child: Text('Ampyang'),
-                                                value: 'Ampyang'),
-                                            DropdownMenuItem(
-                                                child:
-                                                    Text('Multicolour stone'),
-                                                value: 'Multicolour stone'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _carportInput = value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _carportInput = value as String;
-                                          },
-                                        ),
-                                        SizedBox(height: 22),
-                                        DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            labelText: 'Tangga',
-                                          ),
-                                          items: [
-                                            DropdownMenuItem(
-                                                child:
-                                                    Text('Cor beton fin warna'),
-                                                value: 'Cor beton fin warna'),
-                                            // Add more options as needed
-                                          ],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _tanggaInput = value as String;
-                                            });
-                                          },
-                                          onSaved: (value) {
-                                            _tanggaInput = value as String;
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  isExpanded: _isExpanded2,
-                                ),
-                              ],
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.color5,
-                              ),
-                              onPressed: () {
-                                _searchRumah();
-                                _formKey.currentState!.save();
-                                print(_listDataRumah2);
-                              },
-                              child: const Text("Search",
-                                  style: TextStyle(color: AppColors.color4)),
-                            ),
-                          ],
-                        )),
-                    // FOR CHECKING DATA
-                    // Text(
-                    //   'Image URL: ${_listDataRumah[1]['img_tr']}',
-                    // ),
-                    // Text('Fetched Projek: ${_listDataProjek.toString()}'),
-                    // Text('Fetched Data: ${_listDataRumah.toString()}'),
-                    // Text('Option 1: ${widget.option1.toString()}'),
-                    // Text('Option 2: ${widget.option2.toString()}'),
-                    // Text('Option 3: ${widget.option3.toString()}'),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    )
                   ],
+                ),
+                replacement: Container(
+                  width:
+                      50, // Width should match the collapsed width of the sidebar
+                  alignment: Alignment.topCenter, // Align to the top
+                  child: IconButton(
+                    icon: Icon(Icons.menu),
+                    onPressed: () {
+                      setState(() {
+                        _isSidebarVisible = !_isSidebarVisible;
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
             Expanded(
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon:
-                            Icon(_isSidebarVisible ? Icons.close : Icons.menu),
-                        onPressed: () {
-                          setState(() {
-                            _isSidebarVisible = !_isSidebarVisible;
-                          });
-                        },
-                      ),
-                      Text(''),
-                    ],
-                  ),
                   Expanded(
                     flex: 3,
                     child: Container(
