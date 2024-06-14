@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:formsliving/LandingPageWidget.dart';
 import 'package:formsliving/PageDetailRumah.dart';
+import 'package:formsliving/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart'; // Add this line
 
@@ -142,14 +143,16 @@ class _PageRumahState extends State<PageRumah> {
       querySearchParameters.add({'&meja_dapur': _mejaDapurInput});
     }
     if (_lantaiRuangTidurInput.isNotEmpty) {
-      querySearchParameters.add({'&lantai_ruang_tidur': _lantaiRuangTidurInput});
+      querySearchParameters
+          .add({'&lantai_ruang_tidur': _lantaiRuangTidurInput});
     }
     if (_lantaiRuangKeluargaInput.isNotEmpty) {
       querySearchParameters
           .add({'&lantai_ruang_keluarga': _lantaiRuangKeluargaInput});
     }
     if (_lantaiTerasUtamaInput.isNotEmpty) {
-      querySearchParameters.add({'&lantai_teras_utama': _lantaiTerasUtamaInput});
+      querySearchParameters
+          .add({'&lantai_teras_utama': _lantaiTerasUtamaInput});
     }
     if (_rangkaAtapInput.isNotEmpty) {
       querySearchParameters.add({'&rangka_atap': _rangkaAtapInput});
@@ -184,7 +187,7 @@ class _PageRumahState extends State<PageRumah> {
     if (_tanggaInput.isNotEmpty) {
       querySearchParameters.add({'&tangga': _tanggaInput});
     }
-    
+
     // [{projek: [Greenland]}, {min_harga: 0}, {max_harga: 0}, {jml_kmr_tidur: 0}, {jml_kmr_mandi: 0}, {luas_tanah: 0}, {luas_bangunan: 0}]
     String queryParameters = querySearchParameters.toString();
     queryParameters = queryParameters
@@ -305,174 +308,151 @@ class _PageRumahState extends State<PageRumah> {
                           Navigator.pop(context);
                         },
                       ),
-                      title: Text('Advanced Search'),
+                      title: Text(''),
                     ),
-                    Form(
+                    Container(
+                      color: AppColors.color1,
+                      child:  Form(
                         key: _formKey,
                         child: Column(
                           children: [
-                            ExpansionPanelList(
-                              elevation: 0,
-                              expandedHeaderPadding: EdgeInsets.zero,
-                              expansionCallback: (int index, bool isExpanded) {
-                                setState(() {
-                                  _isExpanded = !_isExpanded;
-                                });
-                              },
-                              children: [
-                                ExpansionPanel(
-                                  headerBuilder:
-                                      (BuildContext context, bool isExpanded) {
-                                    return ListTile(
-                                      title: Text('Basic Search'),
-                                    );
+                            Text("Project"),
+
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: _listDataProjekCheckbox.length,
+                              itemBuilder: (context, index) {
+                                // print( "DataRumah : $_listDataRumah");
+                                return CheckboxListTile(
+                                  title: Text(_listDataProjekCheckbox[index]
+                                      ['nama_projek']),
+                                  value: _selectedProjek.contains(
+                                      _listDataProjek[index]['nama_projek']),
+                                  onChanged: (bool? value) {
+                                    if (_listDataProjekCheckbox[index]
+                                            ['checked'] ==
+                                        false) {
+                                      _selectedProjek.add(
+                                          _listDataProjekCheckbox[index]
+                                              ['nama_projek']);
+                                      _listDataProjekCheckbox[index]
+                                          ['checked'] = true;
+                                    } else {
+                                      _selectedProjek.remove(
+                                          _listDataProjekCheckbox[index]
+                                              ['nama_projek']);
+                                      _listDataProjekCheckbox[index]
+                                          ['checked'] = false;
+                                    }
+                                    print(_selectedProjek);
+                                    setState(() {});
+                                    OnSaved:
+                                    (value) => _selectedProjek.toString();
+                                    print(
+                                        "Value Selected Projek $_selectedProjek");
                                   },
-                                  body: Column(
-                                    children: [
-                                      Text("Projek"),
-
-                                      ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount:
-                                            _listDataProjekCheckbox.length,
-                                        itemBuilder: (context, index) {
-                                          // print( "DataRumah : $_listDataRumah");
-                                          return CheckboxListTile(
-                                            title: Text(
-                                                _listDataProjekCheckbox[index]
-                                                    ['nama_projek']),
-                                            value: _selectedProjek.contains(
-                                                _listDataProjek[index]
-                                                    ['nama_projek']),
-                                            onChanged: (bool? value) {
-                                              if (_listDataProjekCheckbox[index]
-                                                      ['checked'] ==
-                                                  false) {
-                                                _selectedProjek.add(
-                                                    _listDataProjekCheckbox[
-                                                        index]['nama_projek']);
-                                                _listDataProjekCheckbox[index]
-                                                    ['checked'] = true;
-                                              } else {
-                                                _selectedProjek.remove(
-                                                    _listDataProjekCheckbox[
-                                                        index]['nama_projek']);
-                                                _listDataProjekCheckbox[index]
-                                                    ['checked'] = false;
-                                              }
-                                              print(_selectedProjek);
-                                              setState(() {});
-                                              OnSaved:
-                                              (value) =>
-                                                  _selectedProjek.toString();
-                                              print(
-                                                  "Value Selected Projek $_selectedProjek");
-                                            },
-                                          );
-                                        },
-                                      ),
-
-                                      // CheckboxListTile(
-                                      //   title: Text('Kalm'),
-                                      //   value: kalmSelected,
-                                      //   onChanged: (bool? value) {
-                                      //     if (kalmSelected == false) {
-                                      //       kalmSelected = true;
-                                      //     } else {
-                                      //       kalmSelected = false;
-                                      //     }
-                                      //     setState(() {});
-                                      //   },
-                                      // ),
-                                      Slider(
-                                        value: _sliderMulaiHarga.toDouble(),
-                                        min: 0,
-                                        max: 100000000,
-                                        onChanged: (double value) {
-                                          setState(() {
-                                            _sliderMulaiHarga = value.toInt();
-                                          });
-                                          OnSaved:
-                                          (value) => _sliderMulaiHarga;
-                                        },
-                                      ),
-                                      Text(
-                                          'Harga Mulai: ${formatToRupiah(_sliderMulaiHarga.toString())}'),
-                                      Slider(
-                                        value: _sliderSelesaiHarga.toDouble(),
-                                        min: 0,
-                                        max: 100000000000,
-                                        onChanged: (double value) {
-                                          setState(() {
-                                            _sliderSelesaiHarga = value.toInt();
-                                          });
-                                          OnSaved:
-                                          (value) => _sliderSelesaiHarga;
-                                        },
-                                      ),
-                                      Text(
-                                          'Sampai Harga: ${formatToRupiah(_sliderSelesaiHarga.toString())}'),
-                                      Slider(
-                                        value: _sliderJmlKmrTidur.toDouble(),
-                                        min: 0,
-                                        max: 20,
-                                        onChanged: (double value) {
-                                          setState(() {
-                                            _sliderJmlKmrTidur = value.toInt();
-                                          });
-                                          OnSaved:
-                                          (value) => _sliderJmlKmrTidur;
-                                        },
-                                      ),
-                                      Text(
-                                          'Jumlah Kamar Tidur: $_sliderJmlKmrTidur'),
-                                      Slider(
-                                        value: _sliderJmlKmrMandi.toDouble(),
-                                        min: 0,
-                                        max: 20,
-                                        onChanged: (double value) {
-                                          setState(() {
-                                            _sliderJmlKmrMandi = value.toInt();
-                                          });
-                                          OnSaved:
-                                          (value) => _sliderJmlKmrMandi;
-                                        },
-                                      ),
-                                      Text(
-                                          'Jumlah Kamar Mandi: $_sliderJmlKmrMandi'),
-                                      Slider(
-                                        value: _sliderLuasTanah.toDouble(),
-                                        min: 0,
-                                        max: 500,
-                                        onChanged: (double value) {
-                                          setState(() {
-                                            _sliderLuasTanah = value.toInt();
-                                          });
-                                          OnSaved:
-                                          (value) => _sliderLuasTanah;
-                                        },
-                                      ),
-                                      Text('Luas Tanah: $_sliderLuasTanah  m²'),
-                                      Slider(
-                                        value: _sliderLuasBangunan.toDouble(),
-                                        min: 0,
-                                        max: 500,
-                                        onChanged: (double value) {
-                                          setState(() {
-                                            _sliderLuasBangunan = value.toInt();
-                                          });
-                                          OnSaved:
-                                          (value) => _sliderLuasBangunan;
-                                        },
-                                      ),
-                                      Text(
-                                          'Luas Bangunan: $_sliderLuasBangunan  m²'),
-                                    ],
-                                  ),
-                                  isExpanded: _isExpanded,
-                                ),
-                              ],
+                                );
+                              },
                             ),
+
+                            // CheckboxListTile(
+                            //   title: Text('Kalm'),
+                            //   value: kalmSelected,
+                            //   onChanged: (bool? value) {
+                            //     if (kalmSelected == false) {
+                            //       kalmSelected = true;
+                            //     } else {
+                            //       kalmSelected = false;
+                            //     }
+                            //     setState(() {});
+                            //   },
+                            // ),
+                            Text(
+                                'Starting Price: ${formatToRupiah(_sliderMulaiHarga.toString())}'),
+                            Slider(
+                              value: _sliderMulaiHarga.toDouble(),
+                              min: 0,
+                              max: 100000000,
+                              onChanged: (double value) {
+                                setState(() {
+                                  _sliderMulaiHarga = value.toInt();
+                                });
+                                OnSaved:
+                                (value) => _sliderMulaiHarga;
+                              },
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                                'Up to Price: ${formatToRupiah(_sliderSelesaiHarga.toString())}'),
+                            Slider(
+                              value: _sliderSelesaiHarga.toDouble(),
+                              min: 0,
+                              max: 100000000000,
+                              onChanged: (double value) {
+                                setState(() {
+                                  _sliderSelesaiHarga = value.toInt();
+                                });
+                                OnSaved:
+                                (value) => _sliderSelesaiHarga;
+                              },
+                            ),
+                            SizedBox(height: 16),
+                            Text('Number of Bedrooms: $_sliderJmlKmrTidur'),
+                            Slider(
+                              value: _sliderJmlKmrTidur.toDouble(),
+                              min: 0,
+                              max: 20,
+                              onChanged: (double value) {
+                                setState(() {
+                                  _sliderJmlKmrTidur = value.toInt();
+                                });
+                                OnSaved:
+                                (value) => _sliderJmlKmrTidur;
+                              },
+                            ),
+                            SizedBox(height: 16),
+                            Text('Number of Bathrooms: $_sliderJmlKmrMandi'),
+                            Slider(
+                              value: _sliderJmlKmrMandi.toDouble(),
+                              min: 0,
+                              max: 20,
+                              onChanged: (double value) {
+                                setState(() {
+                                  _sliderJmlKmrMandi = value.toInt();
+                                });
+                                OnSaved:
+                                (value) => _sliderJmlKmrMandi;
+                              },
+                            ),
+                            SizedBox(height: 16),
+                            Text('Surface area: $_sliderLuasTanah  m²'),
+                            Slider(
+                              value: _sliderLuasTanah.toDouble(),
+                              min: 0,
+                              max: 500,
+                              onChanged: (double value) {
+                                setState(() {
+                                  _sliderLuasTanah = value.toInt();
+                                });
+                                OnSaved:
+                                (value) => _sliderLuasTanah;
+                              },
+                            ),
+                            SizedBox(height: 16),
+                            Text('Building area: $_sliderLuasBangunan  m²'),
+                            Slider(
+                              value: _sliderLuasBangunan.toDouble(),
+                              min: 0,
+                              max: 500,
+                              onChanged: (double value) {
+                                setState(() {
+                                  _sliderLuasBangunan = value.toInt();
+                                });
+                                OnSaved:
+                                (value) => _sliderLuasBangunan;
+                              },
+                            ),
+
                             ExpansionPanelList(
                               elevation: 0,
                               expandedHeaderPadding: EdgeInsets.zero,
@@ -486,10 +466,10 @@ class _PageRumahState extends State<PageRumah> {
                                   headerBuilder:
                                       (BuildContext context, bool isExpanded2) {
                                     return ListTile(
-                                      title: Text('Detail Rumah'),
+                                      title: Text('Advanced Search'),
                                     );
                                   },
-                                  body: Padding(
+                                  body: SingleChildScrollView(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10.0),
                                     child: Column(
@@ -513,7 +493,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _pondasiInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Struktur',
@@ -533,7 +513,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _strukturInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Dinding Dalam',
@@ -557,7 +537,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Dinding Luar',
@@ -580,7 +560,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _dindingLuarInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Dinding Kamar Mandi',
@@ -610,7 +590,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Meja Dapur',
@@ -634,7 +614,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _mejaDapurInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lantai Ruang Tidur',
@@ -660,7 +640,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lantai Ruang Keluarga',
@@ -686,10 +666,11 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            labelText: 'Dinding Kamar Mandi Utama',
+                                            labelText:
+                                                'Dinding Kamar Mandi Utama',
                                           ),
                                           items: [
                                             DropdownMenuItem(
@@ -700,16 +681,13 @@ class _PageRumahState extends State<PageRumah> {
                                                 value: 'Keramik 40 x 40'),
                                             // Add more options as needed
                                           ],
-                                          onChanged: (value) {
-                                           
-                                          },
+                                          onChanged: (value) {},
                                           onSaved: (value) {
                                             _dindingKamarMandiInput =
                                                 value as String;
                                           },
-                                      
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lantai Teras Utama',
@@ -734,7 +712,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Rangka Atap',
@@ -755,7 +733,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _rangkaAtapInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Penutup Atap',
@@ -776,8 +754,9 @@ class _PageRumahState extends State<PageRumah> {
                                             _penutupAtapInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
+                                          isExpanded: true,
                                           decoration: InputDecoration(
                                             labelText: 'Kusen',
                                           ),
@@ -791,7 +770,9 @@ class _PageRumahState extends State<PageRumah> {
                                                 value: 'Kayu Finishing Lazur'),
                                             DropdownMenuItem(
                                                 child: Text(
-                                                    'Pintu Utama / Belakang Kusen Kayu Kamper / Ruang Lain Tanpa Kusen / Pintu Engsel Pivot'),
+                                                    'Pintu Utama / Belakang Kusen Kayu Kamper / Ruang Lain Tanpa Kusen / Pintu Engsel Pivot',
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
                                                 value:
                                                     'Pintu Utama / Belakang Kusen Kayu Kamper / Ruang Lain Tanpa Kusen / Pintu Engsel Pivot'),
                                             // Add more options as needed
@@ -805,8 +786,9 @@ class _PageRumahState extends State<PageRumah> {
                                             _kusenInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
+                                          isExpanded: true,
                                           decoration: InputDecoration(
                                             labelText: 'Daun Pintu',
                                           ),
@@ -818,7 +800,9 @@ class _PageRumahState extends State<PageRumah> {
                                                     'Double Multiplek Finishing Lazur'),
                                             DropdownMenuItem(
                                                 child: Text(
-                                                    'Pintu dobel multiplek fin hpl (depan), Bingkai alumunium isi kaca (belakang)'),
+                                                    'Pintu dobel multiplek fin hpl (depan), Bingkai alumunium isi kaca (belakang)',
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
                                                 value:
                                                     'Pintu dobel multiplek fin hpl (depan), Bingkai alumunium isi kaca (belakang)'),
                                             // Add more options as needed
@@ -832,15 +816,18 @@ class _PageRumahState extends State<PageRumah> {
                                             _daunPintuInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
+                                          isExpanded: true,
                                           decoration: InputDecoration(
                                             labelText: 'Sanitary',
                                           ),
                                           items: [
                                             DropdownMenuItem(
                                                 child: Text(
-                                                    'Artisan - Counter top, Artisan - One piece closet, Artisan - Zink dan kran zink'),
+                                                    'Artisan - Counter top, Artisan - One piece closet, Artisan - Zink dan kran zink',
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
                                                 value:
                                                     'Artisan - Counter top, Artisan - One piece closet, Artisan - Zink dan kran zink'),
                                             DropdownMenuItem(
@@ -862,7 +849,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _sanitaryInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Plafon Dalam',
@@ -883,7 +870,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _plafonDalamInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Handle',
@@ -910,7 +897,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _handleInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lighting',
@@ -932,7 +919,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _lightingInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Daya Listrik',
@@ -960,7 +947,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _dayaListrikInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Carport',
@@ -988,7 +975,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _carportInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 5),
+                                        SizedBox(height: 16),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Tangga',
@@ -1018,17 +1005,20 @@ class _PageRumahState extends State<PageRumah> {
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blueGrey,
+                                backgroundColor: AppColors.color5,
                               ),
                               onPressed: () {
                                 _searchRumah();
                                 _formKey.currentState!.save();
                                 print(_listDataRumah2);
                               },
-                              child: const Text("Search"),
+                              child: const Text("Search",
+                                  style: TextStyle(color: AppColors.color4)),
                             ),
                           ],
                         )),
+                    ),
+                   
                     // FOR CHECKING DATA
                     // Text(
                     //   'Image URL: ${_listDataRumah[1]['img_tr']}',
@@ -1056,7 +1046,7 @@ class _PageRumahState extends State<PageRumah> {
                           });
                         },
                       ),
-                      Text('Page Rumah'),
+                      Text(''),
                     ],
                   ),
                   Expanded(
@@ -1112,7 +1102,7 @@ class _PageRumahState extends State<PageRumah> {
                                       child: Column(
                                         children: [
                                           Text(
-                                            'Blok: ${data['blok']} - ${data['nomor']} / ${data['nama_cluster']} ',
+                                            '${data['blok']} - ${data['nomor']} / ${data['nama_cluster']} ',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 16,
@@ -1120,7 +1110,7 @@ class _PageRumahState extends State<PageRumah> {
                                             ),
                                           ),
                                           Text(
-                                            'Tipe: ${data['jenis_tr']}  ',
+                                            'Tipe ${data['jenis_tr']}  ',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 16,
@@ -1140,7 +1130,7 @@ class _PageRumahState extends State<PageRumah> {
                                                   fontSize: 12,
                                                 ),
                                               ),
-                                              Icon(Icons.king_bed,
+                                              Icon(Icons.bed,
                                                   color: Colors.white),
                                               Text(
                                                 '${data['kmr_tidur_tr']}',
@@ -1149,18 +1139,28 @@ class _PageRumahState extends State<PageRumah> {
                                                   fontSize: 12,
                                                 ),
                                               ),
+                                              Icon(Icons.house,
+                                                  color: Colors.white),
+                                              Text(
+                                                '${data['luas_bangunan_tr']} m²',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                              Icon(Icons.terrain,
+                                                  color: Colors.white),
+                                              Text(
+                                                '${data['luas_tanah']} m²',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
                                             ],
                                           ),
                                           Text(
-                                            'Harga: ${formatToRupiah(data['harga_tr'])}',
-                                            textAlign: TextAlign.left,
-                                          ),
-                                          Text(
-                                            'Luas Bangunan: ${data['luas_bangunan_tr']} m²',
-                                            textAlign: TextAlign.left,
-                                          ),
-                                          Text(
-                                            'Luas Tanah: ${data['luas_tanah']} m²',
+                                            'Harga ${formatToRupiah(data['harga_tr'])}',
                                             textAlign: TextAlign.left,
                                           ),
                                         ],

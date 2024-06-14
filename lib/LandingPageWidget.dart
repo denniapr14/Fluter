@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:formsliving/PageRumah.dart';
+import 'package:formsliving/main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 
 class LandingPageWidget extends StatefulWidget {
   @override
@@ -85,13 +87,13 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Find Fast What You Need',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
+                  'Find Your Dream Home',
+                  style: TextStyle(fontSize: 24, color: AppColors.color3),
                 ),
                 SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.color2,
                     borderRadius: BorderRadius.circular(40),
                   ),
                   width: 700,
@@ -150,8 +152,8 @@ class _LandingPageWidgetState extends State<LandingPageWidget> {
                       ElevatedButton(
                         onPressed: _sendDataToAPI,
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.black,
+                          foregroundColor: AppColors.color4,
+                          backgroundColor: AppColors.color5,
                         ),
                         child: Text('Search'),
                       ),

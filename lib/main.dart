@@ -10,9 +10,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter MySQL Test',
+      title: 'Forms Living',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: AppColors.color1,
+        hintColor: AppColors.color2,
+        scaffoldBackgroundColor: AppColors.color3,
+        textTheme: TextTheme(
+          bodyText1: TextStyle(color: AppColors.color4),
+          bodyText2: TextStyle(color: AppColors.color5),
+          headline1: TextStyle(color: AppColors.color6),
+        ),
+        appBarTheme: AppBarTheme(
+          color: AppColors.color1,
+        ),
+        buttonTheme: ButtonThemeData(
+          buttonColor: AppColors.color2,
+          textTheme: ButtonTextTheme.primary,
+        ),
       ),
       home: LandingPageWidget(),
     );
@@ -49,31 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
-
-//   // Update some data
-//   // await conn.query('update users set age=? where name=?', [26, 'Bob']);
-
-//   // Query again database using a parameterized query
-
-//   // Finally, close the connection
-//   await conn.close();
-// }
-// import 'package:flutter/material.dart';
-// import 'package:formsliving/halaman_rumah.dart';
-
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       title: 'TESTING',
-//       home: HalamanRumah(),
-//     );
-//   }
-// }
+class AppColors {
+  static const Color color1 = Color(0xFF414037);
+  static const Color color2 = Color(0xFFC0BA84);
+  static const Color color3 = Color(0xFFEBDF7A);
+  static const Color color4 = Color(0xFF6B6954);
+  static const Color color5 = Color(0xFFFFEF5A);
+  static const Color color6 = Color(0xFFFFEC31);
+}
