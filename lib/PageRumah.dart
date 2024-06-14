@@ -384,7 +384,7 @@ class _PageRumahState extends State<PageRumah> {
                               ),
                             ),
 
-                            SizedBox(height: 20),
+                            SizedBox(height: 22),
                             Text(
                                 'Up to Price: ${formatToRupiah(_sliderSelesaiHarga.toString())}'),
                             Container(
@@ -402,7 +402,7 @@ class _PageRumahState extends State<PageRumah> {
                                 },
                               ),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 22),
                             Text('Number of Bedrooms: $_sliderJmlKmrTidur'),
                             Container(
                               width: 350,
@@ -419,7 +419,7 @@ class _PageRumahState extends State<PageRumah> {
                                 },
                               ),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 22),
                             Text('Number of Bathrooms: $_sliderJmlKmrMandi'),
                             Container(
                               width: 350,
@@ -436,7 +436,7 @@ class _PageRumahState extends State<PageRumah> {
                                 },
                               ),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 22),
                             Text('Surface area: $_sliderLuasTanah  m²'),
                             Container(
                               width: 350,
@@ -453,7 +453,7 @@ class _PageRumahState extends State<PageRumah> {
                                 },
                               ),
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 22),
                             Text('Building area: $_sliderLuasBangunan  m²'),
                             Container(
                               width: 350,
@@ -511,7 +511,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _pondasiInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Struktur',
@@ -531,7 +531,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _strukturInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Dinding Dalam',
@@ -555,7 +555,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Dinding Luar',
@@ -578,7 +578,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _dindingLuarInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Dinding Kamar Mandi',
@@ -608,7 +608,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Meja Dapur',
@@ -632,7 +632,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _mejaDapurInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lantai Ruang Tidur',
@@ -658,7 +658,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lantai Ruang Keluarga',
@@ -684,7 +684,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText:
@@ -705,7 +705,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lantai Teras Utama',
@@ -730,7 +730,7 @@ class _PageRumahState extends State<PageRumah> {
                                                 value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Rangka Atap',
@@ -751,7 +751,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _rangkaAtapInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Penutup Atap',
@@ -772,7 +772,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _penutupAtapInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           isExpanded: true,
                                           decoration: InputDecoration(
@@ -804,7 +804,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _kusenInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           isExpanded: true,
                                           decoration: InputDecoration(
@@ -834,7 +834,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _daunPintuInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           isExpanded: true,
                                           decoration: InputDecoration(
@@ -867,7 +867,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _sanitaryInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Plafon Dalam',
@@ -888,7 +888,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _plafonDalamInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Handle',
@@ -915,7 +915,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _handleInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Lighting',
@@ -937,7 +937,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _lightingInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Daya Listrik',
@@ -965,7 +965,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _dayaListrikInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Carport',
@@ -993,7 +993,7 @@ class _PageRumahState extends State<PageRumah> {
                                             _carportInput = value as String;
                                           },
                                         ),
-                                        SizedBox(height: 20),
+                                        SizedBox(height: 22),
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
                                             labelText: 'Tangga',
