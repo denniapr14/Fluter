@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart'; // Import the intl package
 import 'package:url_launcher/url_launcher.dart';
+import 'package:formsliving/main.dart';
 
 class PageDetailRumah extends StatefulWidget {
   final int index;
@@ -32,13 +33,6 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
   int _jangkaWaktu = 0;
   Map<String, String> specifications = {};
   List<Map<String, dynamic>> _listDataDenah = [];
-
-  @override
-  void initState() {
-    super.initState();
-    fetchDataDetailTipe();
-    print('index tipe rumah : ${widget.index}');
-  }
 
   Future<void> fetchDataDetailTipe() async {
     final response = await http.get(Uri.parse(
@@ -116,6 +110,38 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
       _jangkaWaktu = jangkaWaktu;
     });
   }
+ void _launchURL() async {
+    String url =
+        'https://formsliving.com/simulation-detail-type/${_dataDetailTipe['id_tipe_rumah']}/${_dataDetailTipe['id_rumah']}';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    fetchDataDetailTipe().then((_) {
+      // Continue with the rest of the code here
+      _getDataDenah();
+      print(_listDataDenah);
+      print('index tipe rumah : ${widget.index}');
+    });
+    _getDataDenah().then((_) {
+      if (_listDataDenah.isNotEmpty) {
+        // Continue with the rest of the code here
+        print(_listDataDenah);
+        print('index tipe rumah : ${widget.index}');
+      } else {
+        // Handle the case when _listDataDenah is empty
+        // You can show an error message or take appropriate action
+      }
+    });
+    print(_listDataDenah);
+    print('index tipe rumah : ${widget.index}');
+  }
+  
 
   String formatRupiah(double amount) {
     final NumberFormat formatCurrency = NumberFormat.currency(
@@ -124,6 +150,10 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
       decimalDigits: 0,
     );
     return formatCurrency.format(amount);
+  }
+  
+  double roundUpToThousands(double value) {
+    return (value / 1000).ceil() * 1000;
   }
 
   @override
@@ -137,76 +167,91 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
               duration: const Duration(milliseconds: 200),
               width: _isSidebarVisible ? 400 : 0,
               child: Visibility(
-                visible: _isSidebarVisible,
+              visible: _isSidebarVisible,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: ListView(
-                  children: [
-                    ListTile(
-                      leading: IconButton(
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      title: Text('Simulasi KPR'),
-                    ),
-                    TextField(
-                      controller: hargaRumahController,
-                      decoration: InputDecoration(
-                        labelText: 'Harga Rumah',
-                      ),
-                      onChanged: (value) {},
-                    ),
-                    TextField(
-                      controller: uangMukaController,
-                      decoration: InputDecoration(
-                        labelText: 'Uang Muka',
-                      ),
-                      onChanged: (value) {},
-                    ),
-                    TextField(
-                      controller: sukuBungaController,
-                      decoration: InputDecoration(
-                        labelText: 'Suku Bunga',
-                      ),
-                      onChanged: (value) {},
-                    ),
-                    TextField(
-                      controller: jangkaWaktuController,
-                      decoration: InputDecoration(
-                        labelText: 'Jangka Waktu',
-                      ),
-                      onChanged: (value) {},
-                    ),
+                children: [
+                  ListTile(
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                    Navigator.pop(context);
+                    },
+                  ),
+                  title: Text('Simulasi KPR'),
+                  ),
+                  SizedBox(height: 22),
+                  TextField(
+                  controller: hargaRumahController,
+                  decoration: InputDecoration(
+                    labelText: 'House Prices',
+                  ),
+                  onChanged: (value) {},
+                  ),
+                  SizedBox(height: 22),
+                  TextField(
+                  controller: uangMukaController,
+                  decoration: InputDecoration(
+                    labelText: 'Down payment',
+                  ),
+                  onChanged: (value) {},
+                  ),
+                  SizedBox(height: 22),
+                  TextField(
+                  controller: sukuBungaController,
+                  decoration: InputDecoration(
+                    labelText: 'Interest rate',
+                  ),
+                  onChanged: (value) {},
+                  ),
+                  SizedBox(height: 22),
+                  TextField(
+                  controller: jangkaWaktuController,
+                  decoration: InputDecoration(
+                    labelText: 'Time period',
+                  ),
+                  onChanged: (value) {},
+                  ),
+                  SizedBox(height: 22),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueGrey,
+                      backgroundColor: AppColors.color5,
                       ),
                       onPressed: hitungSimulasiKPR,
-                      child: const Text("Hitung Simulasi KPR"),
-                    ),
-                    SizedBox(height: 20),
-                    if (_monthlyPayment > 0)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Hasil Simulasi',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                              'Uang Muka: ${_uangMukaAmount}% sejumlah ${formatRupiah(_uangMukaToRupiah)}'),
-                          Text('Suku Bunga: $_sukuBunga%'),
-                          Text('Jangka Waktu: $_jangkaWaktu Tahun'),
-                          Text(
-                            'Cicilan Bulanan: ${formatRupiah(_monthlyPayment)}',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                      child: const Text(
+                      "Calculate KPR Simulation",
+                      style: TextStyle(color: AppColors.color1),
                       ),
-                  ],
+                    ),
+                  SizedBox(height: 20),
+                  if (_monthlyPayment > 0)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    Text(
+                      'Simulation Results',
+                      style: TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 22),
+                    Text(
+                      'Down payment ${_uangMukaAmount}% a number ${formatRupiah(_uangMukaToRupiah)}'),
+                    SizedBox(height: 22),
+                    Text('Interest rate $_sukuBunga%'),
+                    SizedBox(height: 22),
+                    Text('Time period $_jangkaWaktu Years'),
+                    SizedBox(height: 22),
+                    Text(
+                      'Monthly Installments ${formatRupiah(roundUpToThousands(_monthlyPayment))}',
+                      style: TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    ],
+                  ),
+                ],
                 ),
+              ),
               ),
             ),
             Expanded(
@@ -256,59 +301,72 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.bathtub, size: 24.0),
-                          Text(_dataDetailTipe['kmr_mandi_tr'].toString()),
-                          SizedBox(width: 16.0),
-                          Icon(Icons.bedroom_parent, size: 24.0),
-                          Text(_dataDetailTipe['kmr_tidur_tr'].toString()),
+                          Icon(Icons.bathtub, size: 40.0),
+                            Text(' '+_dataDetailTipe['kmr_mandi_tr'].toString(), style: TextStyle(fontSize: 32.0,fontWeight: FontWeight.bold)),
+                            SizedBox(width: 16.0),
+                            Icon(Icons.bed, size: 40.0),
+                            Text(' '+_dataDetailTipe['kmr_tidur_tr'].toString(), style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
                     // Tabs for Denah, Spesifikasi
                     DefaultTabController(
-                      length: 3,
+                      length: 2,
                       child: Column(
                         children: [
                           TabBar(
-                            labelColor: Colors.black,
+                            labelColor: Colors.white,
                             tabs: [
-                              Tab(text: 'Denah'),
-                              Tab(text: 'Spesifikasi'),
-                              Tab(text: 'Lainnya'),
+                              Tab(text: 'Floor plan'),
+                              Tab(text: 'Specification'),
                             ],
                           ),
                           Container(
-                            height: 700.0, // Height of the TabBarView
+                            height: 900.0, // Height of the TabBarView
                             child: TabBarView(
                               children: [
-                                Center(child: Text('Denah Content')),
                                 Center(
-                                  child: Table(
-                                    border: TableBorder.all(
-                                        color: Colors.transparent),
-                                    children:
-                                        specifications.entries.map((entry) {
-                                      return TableRow(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              entry.key,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(entry.value),
-                                          ),
-                                        ],
+                                    child: Container(
+                                    padding: EdgeInsets.only(top: 40, left: 50, right: 50),
+                                    child: ListView.builder(
+                                      itemCount: _listDataDenah.length,
+                                      itemBuilder: (context, index) {
+                                      return Container(
+                                        margin: EdgeInsets.all(8.0),
+                                        child: InteractiveViewer(
+                                        child: Image.network(
+                                          "https://formsliving.com/Home/images/denah/${_listDataDenah[index]['img_rumah']}",
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                          return Text('Image not found');
+                                          },
+                                        ),
+                                        ),
                                       );
-                                    }).toList(),
+                                      },
+                                    ),
+                                    ),
+                                 
+                                ),
+                                Center(
+                                  child: Container(
+                                  padding: EdgeInsets.only(top: 40, left: 50, right: 50),
+                                  child: ListView(
+                                  children: specifications.entries.map((entry) {
+                                    return ListTile(
+                                    title: Text(
+                                      entry.key,
+                                      style: TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Text(entry.value),
+                                    );
+                                  }).toList(),
+                                  ),
                                   ),
                                 ),
-                                Center(child: Text('Lainnya Content')),
-                              ],
+                                SizedBox(height: 22),
+                                ],
                             ),
                           ),
                         ],
@@ -317,15 +375,21 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20.0),
-                        child: Container(
-                          width: 300.0,
-                          child: FloatingActionButton.extended(
-                            onPressed: _launchURL,
-                            label: Text("Beli Sekarang!"),
-                            backgroundColor: Colors.blue,
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: Container(
+                        width: 300.0,
+                        child: FloatingActionButton.extended(
+                        onPressed: _launchURL,
+                        label: Text(
+                          "Buy Now!",
+                          style: TextStyle(
+                          color: AppColors.color1,
+                          fontWeight: FontWeight.w900
                           ),
                         ),
+                        backgroundColor: AppColors.color5,
+                        ),
+                      ),
                       ),
                     ),
                   ],
@@ -337,17 +401,11 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
       ),
     );
   }
-}
 
-void _launchURL() async {
-  const url = 'https://shopee.co.id/kaito.corner#product_list';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
+ 
 }
 
 void main() {
+  Map<String, dynamic> _dataDetailTipe = {}; // Define _dataDetailTipe variable
   runApp(PageDetailRumah(index: 1));
 }

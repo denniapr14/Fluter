@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:formsliving/LandingPageWidget.dart';
 import 'package:formsliving/PageDetailRumah.dart';
 import 'package:formsliving/main.dart';
@@ -20,11 +21,14 @@ class PageRumah extends StatefulWidget {
   State<PageRumah> createState() => _PageRumahState();
 }
 
-class _PageRumahState extends State<PageRumah> {
+class _PageRumahState extends State<PageRumah>
+    with TickerProviderStateMixin {
   List<String> _selectedProjek = [];
 
   @override
   bool _isSidebarVisible = true;
+  late AnimationController _AnimationController;
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   bool _isExpanded = true;
   bool _isExpanded2 = false;
   int _sliderMulaiHarga = 0;
@@ -54,6 +58,8 @@ class _PageRumahState extends State<PageRumah> {
       _carportInput = "",
       _tanggaInput = "";
   final _formKey = GlobalKey<FormState>();
+  double _opacity = 0.0;
+  double _scale = 0.8;
 
   List<Map<String, dynamic>> _listDataRumah = [];
   List<Map<String, dynamic>> _listDataRumah2 = [];
@@ -220,56 +226,13 @@ class _PageRumahState extends State<PageRumah> {
     }
   }
 
-//   void _searchRumah() async {
-//   final Map<String, dynamic> querySearchParameters = {};
-
-//   if (_selectedProjek.isNotEmpty) {
-//     querySearchParameters['projek'] = _selectedProjek.toString();
-//   }
-//   if (_sliderMulaiHarga != null) {
-//     querySearchParameters['min_harga'] = _sliderMulaiHarga.toString();
-//   }
-//   if (_sliderSelesaiHarga != null) {
-//     querySearchParameters['max_harga'] = _sliderSelesaiHarga.toString();
-//   }
-//   if (_sliderJmlKmrTidur != null && _sliderJmlKmrTidur != 0) {
-//     querySearchParameters['jml_kmr_tidur'] = _sliderJmlKmrTidur.toString();
-//   }
-//   if (_sliderJmlKmrMandi != null && _sliderJmlKmrMandi != 0) {
-//     querySearchParameters['jml_kmr_mandi'] = _sliderJmlKmrMandi.toString();
-//   }
-//   if (_sliderLuasTanah != null && _sliderLuasTanah != 0) {
-//     querySearchParameters['luas_tanah'] = _sliderLuasTanah.toString();
-//   }
-//   if (_sliderLuasBangunan != null && _sliderLuasBangunan != 0) {
-//     querySearchParameters['luas_bangunan'] = _sliderLuasBangunan.toString();
-//   }
-
-//   // Construct the query string
-//   final queryString = Uri(queryParameters: querySearchParameters).query;
-
-//   String url = 'https://formsliving.com/api/searchRumah/advanced/?$queryString';
-
-//   try {
-//     print('url: $url ');
-//     http.Response response = await http.get(Uri.parse(url));
-//     if (response.statusCode == 200) {
-//       setState(() {
-//         _listDataRumah2 =
-//             List<Map<String, dynamic>>.from(jsonDecode(response.body));
-//       });
-//       print('LIST DATA RUMAH 2 : ${_listDataRumah2.toString()}');
-//     } else {
-//       throw Exception('Failed to load data');
-//     }
-//   } catch (e) {
-//     print('Error fetching data: $e');
-//   }
-// }
-
   @override
   void initState() {
     super.initState();
+    _AnimationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    )..forward();
     fetchData();
     _getDataProjek();
     _selectedProjek.add(widget.option1);
@@ -296,7 +259,7 @@ class _PageRumahState extends State<PageRumah> {
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              width: _isSidebarVisible ? 400 : 50,
+              width: _isSidebarVisible ? 400 : 0,
               child: Visibility(
                 visible: _isSidebarVisible,
                 child: ListView(
@@ -494,7 +457,7 @@ class _PageRumahState extends State<PageRumah> {
                                       children: [
                                         DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            labelText: 'Pondasi',
+                                            labelText: 'Foundation',
                                           ),
                                           items: [
                                             DropdownMenuItem(
@@ -1065,163 +1028,171 @@ class _PageRumahState extends State<PageRumah> {
                       Text(''),
                     ],
                   ),
-                  Expanded(
+                    Expanded(
                     flex: 3,
                     child: Container(
                       padding: EdgeInsets.all(16),
                       child: GridView.count(
-                        crossAxisCount: 3,
-                        children: List.generate(_listDataRumah.length, (index) {
-                          var data = _listDataRumah[index];
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PageDetailRumah(
-                                      index: data['id_tipe_rumah']),
-                                ),
-                              );
-                            },
-                            child: Card(
-                              child: AnimatedContainer(
-                                duration: Duration(milliseconds: 500),
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                        "https://formsliving.com/Home/images/tipe/${data['img_tr']}"),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(8),
-                                      color: Colors.black.withOpacity(0.5),
-                                      child: Text(
-                                        '${data['nama_projek']}',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    AnimatedContainer(
-                                      duration: Duration(milliseconds: 500),
-                                      padding: EdgeInsets.all(8),
-                                      color: Colors.black.withOpacity(0.5),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            '${data['blok']} - ${data['nomor']} / ${data['nama_cluster']} ',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Tipe ${data['jenis_tr']}  ',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.bathtub,
-                                                      color: Colors.white),
-                                                  SizedBox(
-                                                      width:
-                                                          4), // Space between icon and text
-                                                  Text(
-                                                    '${data['kmr_mandi_tr']}',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.bed,
-                                                      color: Colors.white),
-                                                  SizedBox(
-                                                      width:
-                                                          4), // Space between icon and text
-                                                  Text(
-                                                    '${data['kmr_tidur_tr']}',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.house,
-                                                      color: Colors.white),
-                                                  SizedBox(
-                                                      width:
-                                                          4), // Space between icon and text
-                                                  Text(
-                                                    '${data['luas_bangunan_tr']} m²',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.terrain,
-                                                      color: Colors.white),
-                                                  SizedBox(
-                                                      width:
-                                                          4), // Space between icon and text
-                                                  Text(
-                                                    '${data['luas_tanah']} m²',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Text(
-                                            'Harga ${formatToRupiah(data['harga_tr'])}',
-                                            textAlign: TextAlign.left,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                      crossAxisCount: 3,
+                      children: List.generate(_listDataRumah.length, (index) {
+                        var data = _listDataRumah[index];
+                        return SlideTransition(
+                        position: Tween<Offset>(
+                          begin: Offset(1, 0),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                          parent: _AnimationController,
+                          curve: Interval(
+                            (1 / _listDataRumah.length) * index,
+                            1.0,
+                            curve: Curves.easeIn,
+                          ),
+                          ),
+                        ),
+                        
+                        child: GestureDetector(
+                          onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (context) => PageDetailRumah(
+                              index: data['id_tipe_rumah'],
+                            ),
                             ),
                           );
-                        }),
+                          },
+                          child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 500 + (index * 100)),
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(
+                              "https://formsliving.com/Home/images/tipe/${data['img_tr']}",
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                            ),
+                            child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                              padding: EdgeInsets.all(8),
+                              color: Colors.black.withOpacity(0.5),
+                              child: Text(
+                                '${data['nama_projek']}',
+                                style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              ),
+                              AnimatedContainer(
+                              duration: Duration(milliseconds: 500),
+                              padding: EdgeInsets.all(8),
+                              color: Colors.black.withOpacity(0.5),
+                              child: Column(
+                                children: [
+                                Text(
+                                  '${data['blok']} - ${data['nomor']} / ${data['nama_cluster']} ',
+                                  style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  'Tipe ${data['jenis_tr']}  ',
+                                  style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                  Row(
+                                    children: [
+                                    Icon(Icons.bathtub, color: Colors.white),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      '${data['kmr_mandi_tr']}',
+                                      style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      ),
+                                    ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                    Icon(Icons.bed, color: Colors.white),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      '${data['kmr_tidur_tr']}',
+                                      style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      ),
+                                    ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                    Icon(Icons.house, color: Colors.white),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      '${data['luas_bangunan_tr']} m²',
+                                      style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      ),
+                                    ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                    Icon(Icons.terrain, color: Colors.white),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      '${data['luas_tanah']} m²',
+                                      style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      ),
+                                    ),
+                                    ],
+                                  ),
+                                  ],
+                                ),
+                                Text(
+                                  'Harga ${formatToRupiah(data['harga_tr'])}',
+                                  textAlign: TextAlign.left,
+                                ),
+                                ],
+                              ),
+                              ),
+                            ],
+                            ),
+                          ),
+                          ),
+                        ),
+                        );
+                      }),
                       ),
                     ),
+                    ),
+                  ],
                   ),
-                ],
-              ),
-            ),
+                  
+                  ),
           ],
         ),
       ),
