@@ -15,7 +15,7 @@ class PageDetailRumah extends StatefulWidget {
   _PageDetailRumahState createState() => _PageDetailRumahState();
 }
 
-class _PageDetailRumahState extends State<PageDetailRumah> {
+class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderStateMixin  {
   final TextEditingController hargaRumahController =
       TextEditingController(text: '100000');
   final TextEditingController uangMukaController =
@@ -33,6 +33,7 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
   int _jangkaWaktu = 0;
   Map<String, String> specifications = {};
   List<Map<String, dynamic>> _listDataDenah = [];
+  late AnimationController _AnimationController;
 
   Future<void> fetchDataDetailTipe() async {
     final response = await http.get(Uri.parse(
@@ -128,6 +129,11 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
       print(_listDataDenah);
       print('index tipe rumah : ${widget.index}');
     });
+
+     _AnimationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    )..forward();
     _getDataDenah().then((_) {
       if (_listDataDenah.isNotEmpty) {
         // Continue with the rest of the code here
@@ -285,7 +291,10 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
                       ),
                     ),
                     // Text below the image
-                    Padding(
+                    Container(
+                      child: Column(
+                      children: [
+ Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         'Tipe : ${_dataDetailTipe['jenis_tr'].toString()}',
@@ -309,6 +318,10 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
                         ],
                       ),
                     ),
+                      ],
+                      ),
+                    ),
+                   
                     // Tabs for Denah, Spesifikasi
                     DefaultTabController(
                       length: 2,
@@ -349,23 +362,31 @@ class _PageDetailRumahState extends State<PageDetailRumah> {
                                  
                                 ),
                                 Center(
-                                  child: Container(
-                                  padding: EdgeInsets.only(top: 40, left: 50, right: 50),
-                                  child: ListView(
-                                  children: specifications.entries.map((entry) {
-                                    return ListTile(
-                                    title: Text(
-                                      entry.key,
-                                      style: TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                  child: SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(1, 0),
+                                      end: Offset.zero,
+                                    ).animate(_AnimationController),
+                                    child: Container(
+                                      padding: EdgeInsets.only(top: 40, left: 50, right: 50),
+                                      child: ListView(
+                                        children: specifications.entries.map((entry) {
+                                          return ListTile(
+                                            title: Text(
+                                              entry.key,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            subtitle: Text(entry.value),
+                                          );
+                                        }).toList(),
+                                      ),
                                     ),
-                                    subtitle: Text(entry.value),
-                                    );
-                                  }).toList(),
                                   ),
-                                  ),
-                                ),
-                                SizedBox(height: 22),
+                                )
+
+
                                 ],
                             ),
                           ),
