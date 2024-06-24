@@ -15,7 +15,12 @@ void main() {
     appWindow.alignment = Alignment.center;
     appWindow.maximize();
     appWindow.hide();
-    // appWindow.show();
+    appWindow.title = 'Forms Living';
+    // appWindow.minimize() = false;
+    // appWindow.showSystemCursor = false;
+    // appWindow.useCustomCursor = true;
+    // appWindow.cursor = SystemMouseCursors.basic;
+    // appWindow.fullScreen();
   });
    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   runApp(MyApp());
