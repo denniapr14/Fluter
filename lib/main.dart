@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; 
 import 'package:formsliving/core.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'LandingPageWidget.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Make the app full screen and remove window buttons
+  doWhenWindowReady(() {
+    final initialSize = Size(800, 600);
+    appWindow.minSize = initialSize;
+    appWindow.size = initialSize;
+    appWindow.alignment = Alignment.center;
+    appWindow.maximize();
+    appWindow.hide();
+    // appWindow.show();
+  });
+   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   runApp(MyApp());
 }
 
@@ -13,18 +28,18 @@ class MyApp extends StatelessWidget {
       title: 'Forms Living',
       theme: ThemeData(
         primaryColor: AppColors.color1,
-        hintColor: AppColors.color2,
-        scaffoldBackgroundColor: AppColors.color3,
+        // hintColor: AppColors.color2,
+        // scaffoldBackgroundColor: AppColors.color3,
         textTheme: TextTheme(
-          bodyText1: TextStyle(color: AppColors.color4),
-          bodyText2: TextStyle(color: AppColors.color5),
-          headline1: TextStyle(color: AppColors.color6),
+          // bodyText1: TextStyle(color: AppColors.color4),
+          // bodyText2: TextStyle(color: AppColors.color5),
+          // headline1: TextStyle(color: AppColors.color6),
         ),
         appBarTheme: AppBarTheme(
           color: AppColors.color1,
         ),
         buttonTheme: ButtonThemeData(
-          buttonColor: AppColors.color2,
+          // buttonColor: AppColors.color2,
           textTheme: ButtonTextTheme.primary,
         ),
       ),
@@ -65,11 +80,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class AppColors {
   static const Color color1 = Color(0xFF414037);
-  static const Color color2 = Color(0xFFC0BA84);
-  static const Color color3 = Color(0xFFEBDF7A);
-  static const Color color4 = Color(0xFF6B6954);
-  static const Color color5 = Color(0xFFFFEF5A);
-  static const Color color6 = Color(0xFFFFEC31);
+  static const Color ButtonBg = Color(0xFF206256);
+  static const Color TextButton = Color(0xFFc2c1b8);
+  static const Color BgSlider = Color(0xFF206256);
+  static const Color Slider = Color(0xFF44aa9f);
+  
 }
 
 class GlobalThemeData {

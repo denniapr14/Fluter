@@ -21,8 +21,7 @@ class PageRumah extends StatefulWidget {
   State<PageRumah> createState() => _PageRumahState();
 }
 
-class _PageRumahState extends State<PageRumah>
-    with TickerProviderStateMixin {
+class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
   List<String> _selectedProjek = [];
 
   @override
@@ -271,7 +270,7 @@ class _PageRumahState extends State<PageRumah>
                           Navigator.pop(context);
                         },
                       ),
-                      title: Text(''),
+                      title: Text('Search'),
                     ),
 
                     Form(
@@ -335,6 +334,9 @@ class _PageRumahState extends State<PageRumah>
                               width: 350,
                               child: Slider(
                                 value: _sliderMulaiHarga.toDouble(),
+                                activeColor:
+                                    AppColors.Slider, // Change to desired color
+                                inactiveColor: AppColors.BgSlider,
                                 min: 0,
                                 max: 100000000,
                                 onChanged: (double value) {
@@ -354,6 +356,9 @@ class _PageRumahState extends State<PageRumah>
                               width: 350,
                               child: Slider(
                                 value: _sliderSelesaiHarga.toDouble(),
+                                activeColor:
+                                    AppColors.Slider, // Change to desired color
+                                inactiveColor: AppColors.BgSlider,
                                 min: 0,
                                 max: 100000000000,
                                 onChanged: (double value) {
@@ -371,6 +376,9 @@ class _PageRumahState extends State<PageRumah>
                               width: 350,
                               child: Slider(
                                 value: _sliderJmlKmrTidur.toDouble(),
+                                activeColor:
+                                    AppColors.Slider, // Change to desired color
+                                inactiveColor: AppColors.BgSlider,
                                 min: 0,
                                 max: 20,
                                 onChanged: (double value) {
@@ -388,6 +396,9 @@ class _PageRumahState extends State<PageRumah>
                               width: 350,
                               child: Slider(
                                 value: _sliderJmlKmrMandi.toDouble(),
+                                activeColor:
+                                    AppColors.Slider, // Change to desired color
+                                inactiveColor: AppColors.BgSlider,
                                 min: 0,
                                 max: 20,
                                 onChanged: (double value) {
@@ -405,6 +416,9 @@ class _PageRumahState extends State<PageRumah>
                               width: 350,
                               child: Slider(
                                 value: _sliderLuasTanah.toDouble(),
+                                activeColor:
+                                    AppColors.Slider, // Change to desired color
+                                inactiveColor: AppColors.BgSlider,
                                 min: 0,
                                 max: 500,
                                 onChanged: (double value) {
@@ -422,6 +436,9 @@ class _PageRumahState extends State<PageRumah>
                               width: 350,
                               child: Slider(
                                 value: _sliderLuasBangunan.toDouble(),
+                                activeColor:
+                                    AppColors.Slider, // Change to desired color
+                                inactiveColor: AppColors.BgSlider,
                                 min: 0,
                                 max: 500,
                                 onChanged: (double value) {
@@ -986,7 +1003,7 @@ class _PageRumahState extends State<PageRumah>
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.color5,
+                                backgroundColor: AppColors.ButtonBg,
                               ),
                               onPressed: () {
                                 _searchRumah();
@@ -994,7 +1011,8 @@ class _PageRumahState extends State<PageRumah>
                                 print(_listDataRumah2);
                               },
                               child: const Text("Search",
-                                  style: TextStyle(color: AppColors.color4)),
+                                  style:
+                                      TextStyle(color: AppColors.TextButton)),
                             ),
                           ],
                         )),
@@ -1017,182 +1035,191 @@ class _PageRumahState extends State<PageRumah>
                   Row(
                     children: [
                       IconButton(
-                        icon:
-                            Icon(_isSidebarVisible ? Icons.close : Icons.menu),
+                        icon: _isSidebarVisible
+                            ? ImageIcon(
+                                AssetImage('assets/icon/shrinksidebar256.png'),
+                                size: 24.0,
+                              )
+                            : Icon(Icons.menu),
                         onPressed: () {
                           setState(() {
                             _isSidebarVisible = !_isSidebarVisible;
                           });
                         },
                       ),
-                      Text(''),
+                      Text('Houses'),
                     ],
                   ),
-                    Expanded(
+                  Expanded(
                     flex: 3,
                     child: Container(
                       padding: EdgeInsets.all(16),
                       child: GridView.count(
-                      crossAxisCount: 3,
-                      children: List.generate(_listDataRumah.length, (index) {
-                        var data = _listDataRumah[index];
-                        return SlideTransition(
-                        position: Tween<Offset>(
-                          begin: Offset(1, 0),
-                          end: Offset.zero,
-                        ).animate(
-                          CurvedAnimation(
-                          parent: _AnimationController,
-                          curve: Interval(
-                            (1 / _listDataRumah.length) * index,
-                            1.0,
-                            curve: Curves.easeIn,
-                          ),
-                          ),
-                        ),
-                        
-                        child: GestureDetector(
-                          onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (context) => PageDetailRumah(
-                              index: data['id_tipe_rumah'],
+                        crossAxisCount: 3,
+                        children: List.generate(_listDataRumah.length, (index) {
+                          var data = _listDataRumah[index];
+                          return SlideTransition(
+                            position: Tween<Offset>(
+                              begin: Offset(1, 0),
+                              end: Offset.zero,
+                            ).animate(
+                              CurvedAnimation(
+                                parent: _AnimationController,
+                                curve: Interval(
+                                  (1 / _listDataRumah.length) * index,
+                                  1.0,
+                                  curve: Curves.easeIn,
+                                ),
+                              ),
                             ),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PageDetailRumah(
+                                      index: data['id_tipe_rumah'],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: AnimatedContainer(
+                                  duration: Duration(
+                                      milliseconds: 500 + (index * 100)),
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        "https://formsliving.com/Home/images/tipe/${data['img_tr']}",
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(8),
+                                        color: Colors.black.withOpacity(0.5),
+                                        child: Text(
+                                          '${data['nama_projek']}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      AnimatedContainer(
+                                        duration: Duration(milliseconds: 500),
+                                        padding: EdgeInsets.all(8),
+                                        color: Colors.black.withOpacity(0.5),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              '${data['blok']} - ${data['nomor']} / ${data['nama_cluster']} ',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Tipe ${data['jenis_tr']}  ',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Icon(Icons.bathtub,
+                                                        color: Colors.white),
+                                                    SizedBox(width: 4),
+                                                    Text(
+                                                      '${data['kmr_mandi_tr']}',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Icon(Icons.bed,
+                                                        color: Colors.white),
+                                                    SizedBox(width: 4),
+                                                    Text(
+                                                      '${data['kmr_tidur_tr']}',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Icon(Icons.house,
+                                                        color: Colors.white),
+                                                    SizedBox(width: 4),
+                                                    Text(
+                                                      '${data['luas_bangunan_tr']} m²',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Icon(Icons.terrain,
+                                                        color: Colors.white),
+                                                    SizedBox(width: 4),
+                                                    Text(
+                                                      '${data['luas_tanah']} m²',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              'Harga ${formatToRupiah(data['harga_tr'])}',
+                                              textAlign: TextAlign.left,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
                           );
-                          },
-                          child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 500 + (index * 100)),
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(
-                              "https://formsliving.com/Home/images/tipe/${data['img_tr']}",
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                            ),
-                            child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                              padding: EdgeInsets.all(8),
-                              color: Colors.black.withOpacity(0.5),
-                              child: Text(
-                                '${data['nama_projek']}',
-                                style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              ),
-                              AnimatedContainer(
-                              duration: Duration(milliseconds: 500),
-                              padding: EdgeInsets.all(8),
-                              color: Colors.black.withOpacity(0.5),
-                              child: Column(
-                                children: [
-                                Text(
-                                  '${data['blok']} - ${data['nomor']} / ${data['nama_cluster']} ',
-                                  style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  'Tipe ${data['jenis_tr']}  ',
-                                  style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                  Row(
-                                    children: [
-                                    Icon(Icons.bathtub, color: Colors.white),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '${data['kmr_mandi_tr']}',
-                                      style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      ),
-                                    ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                    Icon(Icons.bed, color: Colors.white),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '${data['kmr_tidur_tr']}',
-                                      style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      ),
-                                    ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                    Icon(Icons.house, color: Colors.white),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '${data['luas_bangunan_tr']} m²',
-                                      style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      ),
-                                    ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                    Icon(Icons.terrain, color: Colors.white),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '${data['luas_tanah']} m²',
-                                      style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      ),
-                                    ),
-                                    ],
-                                  ),
-                                  ],
-                                ),
-                                Text(
-                                  'Harga ${formatToRupiah(data['harga_tr'])}',
-                                  textAlign: TextAlign.left,
-                                ),
-                                ],
-                              ),
-                              ),
-                            ],
-                            ),
-                          ),
-                          ),
-                        ),
-                        );
-                      }),
+                        }),
                       ),
                     ),
-                    ),
-                  ],
                   ),
-                  
-                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

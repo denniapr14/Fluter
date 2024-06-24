@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math'; // Import the dart:math library
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart'; // Import the intl package
 import 'package:url_launcher/url_launcher.dart';
@@ -15,7 +16,8 @@ class PageDetailRumah extends StatefulWidget {
   _PageDetailRumahState createState() => _PageDetailRumahState();
 }
 
-class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderStateMixin  {
+class _PageDetailRumahState extends State<PageDetailRumah>
+    with TickerProviderStateMixin {
   final TextEditingController hargaRumahController =
       TextEditingController(text: '100000');
   final TextEditingController uangMukaController =
@@ -111,7 +113,8 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
       _jangkaWaktu = jangkaWaktu;
     });
   }
- void _launchURL() async {
+
+  void _launchURL() async {
     String url =
         'https://formsliving.com/simulation-detail-type/${_dataDetailTipe['id_tipe_rumah']}/${_dataDetailTipe['id_rumah']}';
     if (await canLaunch(url)) {
@@ -120,6 +123,7 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
       throw 'Could not launch $url';
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -130,7 +134,7 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
       print('index tipe rumah : ${widget.index}');
     });
 
-     _AnimationController = AnimationController(
+    _AnimationController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     )..forward();
@@ -147,7 +151,6 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
     print(_listDataDenah);
     print('index tipe rumah : ${widget.index}');
   }
-  
 
   String formatRupiah(double amount) {
     final NumberFormat formatCurrency = NumberFormat.currency(
@@ -157,7 +160,7 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
     );
     return formatCurrency.format(amount);
   }
-  
+
   double roundUpToThousands(double value) {
     return (value / 1000).ceil() * 1000;
   }
@@ -173,91 +176,129 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
               duration: const Duration(milliseconds: 200),
               width: _isSidebarVisible ? 400 : 0,
               child: Visibility(
-              visible: _isSidebarVisible,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                visible: _isSidebarVisible,
                 child: ListView(
-                children: [
-                  ListTile(
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                    Navigator.pop(context);
-                    },
-                  ),
-                  title: Text('Simulasi KPR'),
-                  ),
-                  SizedBox(height: 22),
-                  TextField(
-                  controller: hargaRumahController,
-                  decoration: InputDecoration(
-                    labelText: 'House Prices',
-                  ),
-                  onChanged: (value) {},
-                  ),
-                  SizedBox(height: 22),
-                  TextField(
-                  controller: uangMukaController,
-                  decoration: InputDecoration(
-                    labelText: 'Down payment',
-                  ),
-                  onChanged: (value) {},
-                  ),
-                  SizedBox(height: 22),
-                  TextField(
-                  controller: sukuBungaController,
-                  decoration: InputDecoration(
-                    labelText: 'Interest rate',
-                  ),
-                  onChanged: (value) {},
-                  ),
-                  SizedBox(height: 22),
-                  TextField(
-                  controller: jangkaWaktuController,
-                  decoration: InputDecoration(
-                    labelText: 'Time period',
-                  ),
-                  onChanged: (value) {},
-                  ),
-                  SizedBox(height: 22),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.color5,
+                  children: [
+                    ListTile(
+                      leading: IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
-                      onPressed: hitungSimulasiKPR,
-                      child: const Text(
-                      "Calculate KPR Simulation",
-                      style: TextStyle(color: AppColors.color1),
+                      title: Text('Simulasi KPR'),
+                    ),
+                    
+                    SizedBox(height: 22),
+                    SizedBox(
+                      width: 50, // Adjusted width for hargaRumahController
+                      child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 180),
+                      child: TextField(
+                        controller: hargaRumahController,
+                        decoration: InputDecoration(
+                        labelText: 'House Prices',
+                        ),
+                        onChanged: (value) {},
+                        enabled: false, // Make the TextField non-editable
+                      ),
                       ),
                     ),
-                  SizedBox(height: 20),
-                  if (_monthlyPayment > 0)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    Text(
-                      'Simulation Results',
-                      style: TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                    SizedBox(height: 22),
+                    SizedBox(
+                      width: 200, // Adjusted width for uangMukaController
+                      child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 240),
+                      child: TextField(
+                        controller: uangMukaController,
+                        decoration: InputDecoration(
+                        labelText: 'Down payment',
+                        ),
+                        onChanged: (value) {},
+                      ),
+                      ),
                     ),
                     SizedBox(height: 22),
-                    Text(
-                      'Down payment ${_uangMukaAmount}% a number ${formatRupiah(_uangMukaToRupiah)}'),
-                    SizedBox(height: 22),
-                    Text('Interest rate $_sukuBunga%'),
-                    SizedBox(height: 22),
-                    Text('Time period $_jangkaWaktu Years'),
-                    SizedBox(height: 22),
-                    Text(
-                      'Monthly Installments ${formatRupiah(roundUpToThousands(_monthlyPayment))}',
-                      style: TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                    SizedBox(
+                      width: 200, // Adjusted width for sukuBungaController
+                      child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 240),
+                      child: TextField(
+                        controller: sukuBungaController,
+                        decoration: InputDecoration(
+                        labelText: 'Interest',
+                        ),
+                        onChanged: (value) {},
+                      ),
+                      ),
                     ),
-                    ],
-                  ),
-                ],
+                    SizedBox(height: 22),
+                    SizedBox(
+                      width: 200, // Adjusted width for jangkaWaktuController
+                      child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 240),
+                      child: TextField(
+                        controller: jangkaWaktuController,
+                        decoration: InputDecoration(
+                        labelText: 'Time period',
+                        ),
+                        onChanged: (value) {},
+                      ),
+                      ),
+                    ),
+                    SizedBox(height: 22),
+                    Center(
+                      child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.ButtonBg,
+                        ),
+                        onPressed: hitungSimulasiKPR,
+                        child: const Text(
+                        "Calculate KPR Simulation",
+                        style: TextStyle(color: AppColors.TextButton),
+                        ),
+                      ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (_monthlyPayment > 0)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                          Text(
+                            'Simulation Results',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 22),
+                          Text(
+                            'Down payment ${_uangMukaAmount}% a number ${formatRupiah(_uangMukaToRupiah)}'),
+                          SizedBox(height: 22),
+                          Text('Interest $_sukuBunga%'),
+                          SizedBox(height: 22),
+                          Text('Time period $_jangkaWaktu Years'),
+                          SizedBox(height: 22),
+                          Text(
+                            'Monthly Installments ${formatRupiah(roundUpToThousands(_monthlyPayment))}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                          ),
+                          ],
+                        ),
+                      ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
               ),
             ),
             Expanded(
@@ -267,8 +308,13 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
                     Row(
                       children: [
                         IconButton(
-                          icon: Icon(
-                              _isSidebarVisible ? Icons.close : Icons.menu),
+                          icon: _isSidebarVisible
+                              ? ImageIcon(
+                                  AssetImage(
+                                      'assets/icon/shrinksidebar256.png'),
+                                  size: 24.0,
+                                )
+                              : Icon(Icons.menu),
                           onPressed: () {
                             setState(() {
                               _isSidebarVisible = !_isSidebarVisible;
@@ -293,35 +339,57 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
                     // Text below the image
                     Container(
                       child: Column(
-                      children: [
- Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Tipe : ${_dataDetailTipe['jenis_tr'].toString()}',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    // Icons for bath and room
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.bathtub, size: 40.0),
-                            Text(' '+_dataDetailTipe['kmr_mandi_tr'].toString(), style: TextStyle(fontSize: 32.0,fontWeight: FontWeight.bold)),
-                            SizedBox(width: 16.0),
-                            Icon(Icons.bed, size: 40.0),
-                            Text(' '+_dataDetailTipe['kmr_tidur_tr'].toString(), style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold)),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "${_dataDetailTipe['blok']} - ${_dataDetailTipe['nomor']} / ${_dataDetailTipe['nama_cluster']}",
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Tipe ${_dataDetailTipe['jenis_tr'].toString()}',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          // Icons for bath and room
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.bathtub, size: 24.0),
+                                Text(
+                                    ' ' +
+                                        _dataDetailTipe['kmr_mandi_tr']
+                                            .toString(),
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold)),
+                                SizedBox(width: 16.0),
+                                Icon(Icons.bed, size: 24.0),
+                                Text(
+                                    ' ' +
+                                        _dataDetailTipe['kmr_tidur_tr']
+                                            .toString(),
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                      ],
-                      ),
-                    ),
-                   
+
                     // Tabs for Denah, Spesifikasi
                     DefaultTabController(
                       length: 2,
@@ -339,27 +407,30 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
                             child: TabBarView(
                               children: [
                                 Center(
-                                    child: Container(
-                                    padding: EdgeInsets.only(top: 40, left: 50, right: 50),
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                        top: 40, left: 50, right: 50),
                                     child: ListView.builder(
                                       itemCount: _listDataDenah.length,
                                       itemBuilder: (context, index) {
-                                      return Container(
-                                        margin: EdgeInsets.all(8.0),
-                                        child: InteractiveViewer(
-                                        child: Image.network(
-                                          "https://formsliving.com/Home/images/denah/${_listDataDenah[index]['img_rumah']}",
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                          return Text('Image not found');
-                                          },
-                                        ),
-                                        ),
-                                      );
+                                        return Container(
+                                          margin: EdgeInsets.all(8.0),
+                                          child: InteractiveViewer(
+                                            child: Image.network(
+                                              "https://formsliving.com/Home/images/denah/${_listDataDenah[index]['img_rumah']}",
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (BuildContext context,
+                                                      Object exception,
+                                                      StackTrace? stackTrace) {
+                                                return Text('Image not found');
+                                              },
+                                            ),
+                                          ),
+                                        );
                                       },
                                     ),
-                                    ),
-                                 
+                                  ),
                                 ),
                                 Center(
                                   child: SlideTransition(
@@ -368,26 +439,23 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
                                       end: Offset.zero,
                                     ).animate(_AnimationController),
                                     child: Container(
-                                      padding: EdgeInsets.only(top: 40, left: 50, right: 50),
+                                      padding: EdgeInsets.only(
+                                          top: 40, left: 50, right: 50),
                                       child: ListView(
-                                        children: specifications.entries.map((entry) {
+                                        children:
+                                            specifications.entries.map((entry) {
                                           return ListTile(
                                             title: Text(
-                                              entry.key,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                              '${entry.key} : ${entry.value}',
+                                              style: TextStyle(),
                                             ),
-                                            subtitle: Text(entry.value),
                                           );
                                         }).toList(),
                                       ),
                                     ),
                                   ),
                                 )
-
-
-                                ],
+                              ],
                             ),
                           ),
                         ],
@@ -396,21 +464,20 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
-                      child: Container(
-                        width: 300.0,
-                        child: FloatingActionButton.extended(
-                        onPressed: _launchURL,
-                        label: Text(
-                          "Buy Now!",
-                          style: TextStyle(
-                          color: AppColors.color1,
-                          fontWeight: FontWeight.w900
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: Container(
+                          width: 300.0,
+                          child: FloatingActionButton.extended(
+                            onPressed: _launchURL,
+                            label: Text(
+                              "Buy Now!",
+                              style: TextStyle(
+                                  color: AppColors.TextButton,
+                                  fontWeight: FontWeight.w900),
+                            ),
+                            backgroundColor: AppColors.ButtonBg,
                           ),
                         ),
-                        backgroundColor: AppColors.color5,
-                        ),
-                      ),
                       ),
                     ),
                   ],
@@ -422,8 +489,6 @@ class _PageDetailRumahState extends State<PageDetailRumah> with TickerProviderSt
       ),
     );
   }
-
- 
 }
 
 void main() {
