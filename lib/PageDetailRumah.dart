@@ -203,7 +203,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                   ),
                 ),
               duration: const Duration(milliseconds: 200),
-              width: _isSidebarVisible ? 300 : 72,
+              width: _isSidebarVisible ? 400 : 72,
               child: Visibility(
                 child: ListView(
                   // visible: _isSidebarVisible,
