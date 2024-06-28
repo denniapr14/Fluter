@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math'; // Import the dart:math library
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -161,6 +162,10 @@ class _PageDetailRumahState extends State<PageDetailRumah>
     return formatCurrency.format(amount);
   }
 
+ String formatToRupiah(String number) {
+    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ');
+    return formatter.format(int.parse(number));
+  }
   double roundUpToThousands(double value) {
     return (value / 1000).ceil() * 1000;
   }
@@ -170,133 +175,164 @@ class _PageDetailRumahState extends State<PageDetailRumah>
     return MaterialApp(
       theme: ThemeData.dark(),
       home: Scaffold(
-        body: Row(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                size: 30,
+              )),
+          title: (_dataDetailTipe['nama_cluster'] ==null)?CircularProgressIndicator() : Text(
+              "${_dataDetailTipe['blok']} - ${_dataDetailTipe['nomor']} / ${_dataDetailTipe['nama_cluster']}"),
+          centerTitle: true,
+          actions: [
+            IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
+          ],
+        ),
+        body:  Row(
           children: [
             AnimatedContainer(
+              decoration: BoxDecoration(
+                  border: Border(
+                    right: BorderSide(
+                      color: AppColors.BgSlider,  // Customize the color here
+                      width: 2,             // Customize the width here
+                    ),
+                  ),
+                ),
               duration: const Duration(milliseconds: 200),
-              width: _isSidebarVisible ? 400 : 0,
+              width: _isSidebarVisible ? 300 : 72,
               child: Visibility(
-                visible: _isSidebarVisible,
                 child: ListView(
+                  // visible: _isSidebarVisible,
                   children: [
                     ListTile(
                       leading: IconButton(
-                        icon: Icon(Icons.arrow_back),
+                        icon: _isSidebarVisible
+                            ? ImageIcon(
+                                AssetImage('assets/icon/shrinksidebar256.png'),
+                                size: 24.0,
+                              )
+                            : Icon(Icons.menu),
                         onPressed: () {
-                          Navigator.pop(context);
+                          setState(() {
+                            _isSidebarVisible = !_isSidebarVisible;
+                          });
                         },
                       ),
-                      title: Text('Simulasi KPR'),
                     ),
-                    
-                    SizedBox(height: 22),
-                    SizedBox(
-                      width: 50, // Adjusted width for hargaRumahController
-                      child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 180),
-                      child: TextField(
-                        controller: hargaRumahController,
-                        decoration: InputDecoration(
-                        labelText: 'House Prices',
-                        ),
-                        onChanged: (value) {},
-                        enabled: false, // Make the TextField non-editable
-                      ),
-                      ),
-                    ),
-                    SizedBox(height: 22),
-                    SizedBox(
-                      width: 200, // Adjusted width for uangMukaController
-                      child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 240),
-                      child: TextField(
-                        controller: uangMukaController,
-                        decoration: InputDecoration(
-                        labelText: 'Down payment',
-                        ),
-                        onChanged: (value) {},
-                      ),
-                      ),
-                    ),
-                    SizedBox(height: 22),
-                    SizedBox(
-                      width: 200, // Adjusted width for sukuBungaController
-                      child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 240),
-                      child: TextField(
-                        controller: sukuBungaController,
-                        decoration: InputDecoration(
-                        labelText: 'Interest',
-                        ),
-                        onChanged: (value) {},
-                      ),
-                      ),
-                    ),
-                    SizedBox(height: 22),
-                    SizedBox(
-                      width: 200, // Adjusted width for jangkaWaktuController
-                      child: Padding(
-                      padding: EdgeInsets.only(left: 40, right: 240),
-                      child: TextField(
-                        controller: jangkaWaktuController,
-                        decoration: InputDecoration(
-                        labelText: 'Time period',
-                        ),
-                        onChanged: (value) {},
-                      ),
-                      ),
-                    ),
-                    SizedBox(height: 22),
-                    Center(
-                      child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.ButtonBg,
-                        ),
-                        onPressed: hitungSimulasiKPR,
-                        child: const Text(
-                        "Calculate KPR Simulation",
-                        style: TextStyle(color: AppColors.TextButton),
-                        ),
-                      ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (_monthlyPayment > 0)
-                        Column(
+                    Visibility(
+                      visible: _isSidebarVisible,
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(40, 0, 20, 0),
+                        alignment: Alignment.centerLeft,
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                          Text(
-                            'Simulation Results',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 22),
-                          Text(
-                            'Down payment ${_uangMukaAmount}% a number ${formatRupiah(_uangMukaToRupiah)}'),
-                          SizedBox(height: 22),
-                          Text('Interest $_sukuBunga%'),
-                          SizedBox(height: 22),
-                          Text('Time period $_jangkaWaktu Years'),
-                          SizedBox(height: 22),
-                          Text(
-                            'Monthly Installments ${formatRupiah(roundUpToThousands(_monthlyPayment))}',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                          ),
+                            Text(
+                              'Simulation KPR',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 16.0),
+                             (_dataDetailTipe['harga_tr'] ==null)?CircularProgressIndicator() : 
+                            TextField(
+                              controller: hargaRumahController,
+                              decoration: InputDecoration(
+                                labelText: 'Price',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            SizedBox(height: 16.0),
+                            Container(
+                              width: 170, 
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  
+                                  TextField(
+                                    controller: uangMukaController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Down Payment (%)',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  SizedBox(height: 16.0),
+                                  TextField(
+                                    controller: sukuBungaController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Interest (%)',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                  SizedBox(height: 16.0),
+                                  TextField(
+                                    controller: jangkaWaktuController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Time period (Year)',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 16.0),
+                            ElevatedButton(
+                               style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.ButtonBg,
+                                ),
+                              onPressed: () {
+                              hitungSimulasiKPR();
+                              },
+                              child: Text(
+                              'Calculate',
+                              style: TextStyle(color: AppColors.TextButton),
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (_monthlyPayment > 0)
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Simulation Results',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                            'Down payment ${_uangMukaAmount}% a number ${formatRupiah(_uangMukaToRupiah)}'),
+                                        SizedBox(height: 8),
+                                        Text('Interest $_sukuBunga%'),
+                                        SizedBox(height: 8),
+                                        Text('Time period $_jangkaWaktu Years'),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          'Monthly Installments ${formatRupiah(roundUpToThousands(_monthlyPayment))}',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                      ],
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -304,92 +340,77 @@ class _PageDetailRumahState extends State<PageDetailRumah>
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: _isSidebarVisible
-                              ? ImageIcon(
-                                  AssetImage(
-                                      'assets/icon/shrinksidebar256.png'),
-                                  size: 24.0,
-                                )
-                              : Icon(Icons.menu),
-                          onPressed: () {
-                            setState(() {
-                              _isSidebarVisible = !_isSidebarVisible;
-                            });
-                          },
-                        ),
-                        Text(
-                            "${_dataDetailTipe['nama_cluster'].toString()} / ${_dataDetailTipe['blok'].toString()} - ${_dataDetailTipe['nomor'].toString()}"),
-                      ],
-                    ),
+                  children: [  (_dataDetailTipe['img_tr'] ==null)?CircularProgressIndicator() :
                     Container(
+                      width: 700,
                       margin: EdgeInsets.all(16.0),
-                      width: MediaQuery.of(context).size.width * 0.8,
+                      // width: MediaQuery.of(context).size.width * 0.8,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20.0),
-                        child: Image.network(
+                        child:   Image.network(
                           'https://formsliving.com/Home/images/tipe/${_dataDetailTipe['img_tr']}',
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
+
                     // Text below the image
-                    Container(
-                      child: Column(
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "${_dataDetailTipe['blok']} - ${_dataDetailTipe['nomor']} / ${_dataDetailTipe['nama_cluster']}",
-                              style: TextStyle(
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.bold,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: 
+                                 (_dataDetailTipe['jenis_tr'] ==null)?CircularProgressIndicator() :
+                                Text(
+                                  'Tipe ${_dataDetailTipe['jenis_tr'].toString()}',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                            ),
+                              Row(
+                                children: [
+                                  Icon(Icons.bathtub, size: 24.0),
+                                   (_dataDetailTipe['kmr_mandi_tr'] ==null)?CircularProgressIndicator() :
+                                  Text(
+                                      ' ' +
+                                          _dataDetailTipe['kmr_mandi_tr']
+                                              .toString(),
+                                      style: TextStyle(
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold)),
+                                  SizedBox(width: 16.0),
+                                  Icon(Icons.bed, size: 24.0),
+                                  (_dataDetailTipe['kmr_tidur_tr'] ==null)?CircularProgressIndicator() :
+                                  Text(
+                                      ' ' +
+                                          _dataDetailTipe['kmr_tidur_tr']
+                                              .toString(),
+                                      style: TextStyle(
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              )
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Tipe ${_dataDetailTipe['jenis_tr'].toString()}',
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+
                           // Icons for bath and room
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.bathtub, size: 24.0),
-                                Text(
-                                    ' ' +
-                                        _dataDetailTipe['kmr_mandi_tr']
-                                            .toString(),
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold)),
-                                SizedBox(width: 16.0),
-                                Icon(Icons.bed, size: 24.0),
-                                Text(
-                                    ' ' +
-                                        _dataDetailTipe['kmr_tidur_tr']
-                                            .toString(),
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold)),
-                              ],
+                          Spacer(),
+                          (_dataDetailTipe['harga_tr'] ==null)?CircularProgressIndicator() : 
+                            Padding(
+                              padding: EdgeInsets.only(right: 42),
+                              child: Text(formatToRupiah(_dataDetailTipe['harga_tr'])),
                             ),
-                          ),
                         ],
                       ),
                     ),
-
                     // Tabs for Denah, Spesifikasi
                     DefaultTabController(
                       length: 2,
@@ -416,7 +437,8 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                                         return Container(
                                           margin: EdgeInsets.all(8.0),
                                           child: InteractiveViewer(
-                                            child: Image.network(
+                                            child:  (_dataDetailTipe['img_rumah'] ==null)? const CircularProgressIndicator() : 
+                                            Image.network(
                                               "https://formsliving.com/Home/images/denah/${_listDataDenah[index]['img_rumah']}",
                                               fit: BoxFit.cover,
                                               errorBuilder:
@@ -488,6 +510,27 @@ class _PageDetailRumahState extends State<PageDetailRumah>
         ),
       ),
     );
+  }
+
+  void _onLoading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: new Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              new CircularProgressIndicator(),
+              new Text("Loading"),
+            ],
+          ),
+        );
+      },
+    );
+    new Future.delayed(new Duration(seconds: 5), () {
+      Navigator.pop(context); //pop dialog
+    });
   }
 }
 

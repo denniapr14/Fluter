@@ -85,10 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class AppColors {
   static const Color color1 = Color(0xFF414037);
-  static const Color ButtonBg = Color(0xFF206256);
-  static const Color TextButton = Color(0xFFc2c1b8);
-  static const Color BgSlider = Color(0xFF206256);
-  static const Color Slider = Color(0xFF44aa9f);
+  static const Color ButtonBg = Color.fromARGB(255, 1, 138, 113);
+  static const Color TextButton = Color.fromARGB(255, 255, 255, 255);
+  static const Color BgSlider = Color(0xFF585e68);
+   static const Color Slider = Color.fromARGB(255, 1, 138, 113);
 }
 
 class GlobalThemeData {
