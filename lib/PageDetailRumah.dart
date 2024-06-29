@@ -240,16 +240,19 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                             ),
                             SizedBox(height: 16.0),
                              (_dataDetailTipe['harga_tr'] ==null)?CircularProgressIndicator() : 
-                            TextField(
-                              controller: hargaRumahController,
-                              decoration: InputDecoration(
-                                labelText: 'Price',
-                                border: OutlineInputBorder(),
+                            Container(
+                              width: 200,
+                              child: TextField(
+                                controller: hargaRumahController,
+                                decoration: InputDecoration(
+                                  labelText: 'Price',
+                                  border: OutlineInputBorder(),
+                                ),
                               ),
                             ),
                             SizedBox(height: 16.0),
                             Container(
-                              width: 170, 
+                              width: 100, 
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
