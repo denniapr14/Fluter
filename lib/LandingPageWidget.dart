@@ -80,108 +80,114 @@ class _LandingPageWidgetState extends State<LandingPageWidget> with TickerProvid
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: NetworkImage(
-                'https://images.pexels.com/photos/1261728/pexels-photo-1261728.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
-            fit: BoxFit.cover,
+    
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      // theme: ThemeData.dark(),
+      home: Scaffold(
+          
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                  'https://images.pexels.com/photos/1261728/pexels-photo-1261728.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SlideTransition(
-                  position: Tween<Offset>(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SlideTransition(
+                    position: Tween<Offset>(
+                      begin: Offset(0, -1),
+                      end: Offset.zero,
+                    ).animate(_landingController),
+                    child: Text(
+                      'Find Your Dream Home',
+                      style: TextStyle(fontSize: 24, color: Colors.white),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  SlideTransition(
+                    position: Tween<Offset>(
                     begin: Offset(0, -1),
                     end: Offset.zero,
-                  ).animate(_landingController),
-                  child: Text(
-                    'Find Your Dream Home',
-                    style: TextStyle(fontSize: 24, color: Colors.white),
-                  ),
-                ),
-                SizedBox(height: 20),
-                SlideTransition(
-                  position: Tween<Offset>(
-                  begin: Offset(0, -1),
-                  end: Offset.zero,
-                  ).animate(_landingControllerContainer),
-                  child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  width: 700,
-                  height: 60,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    DropdownButton<String>(
-                      value: _selectedOption1,
-                      onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedOption1 = newValue!;
-                      });
-                      },
-                      items: _listData.map<DropdownMenuItem<String>>(
-                        (Map<String, dynamic> data) {
-                      return DropdownMenuItem<String>(
-                        value: data['nama_projek'],
-                        child: Text(data['nama_projek']),
-                      );
-                      }).toList(),
+                    ).animate(_landingControllerContainer),
+                    child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(40),
                     ),
-                    SizedBox(width: 40),
-                    DropdownButton<int>(
-                      value: _selectedOption2,
-                      onChanged: (int? newValue) {
-                      setState(() {
-                        _selectedOption2 = newValue!;
-                      });
-                      },
-                      items: optionValues2
-                        .map<DropdownMenuItem<int>>((int value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text('${value ~/ 1000000} jt'),
-                      );
-                      }).toList(),
-                    ),
-                    SizedBox(width: 40),
-                    DropdownButton<int>(
-                      value: _selectedOption3,
-                      onChanged: (int? newValue) {
-                      setState(() {
-                        _selectedOption3 = newValue!;
-                      });
-                      },
-                      items: optionValues3
-                        .map<DropdownMenuItem<int>>((int value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text('${value ~/ 1000000000} Milyar'),
-                      );
-                      }).toList(),
-                    ),
-                    SizedBox(width: 40),
-                    ElevatedButton(
-                      onPressed: _sendDataToAPI,
-                      style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.black,
+                    width: 700,
+                    height: 60,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                      DropdownButton<String>(
+                        value: _selectedOption1,
+                        onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedOption1 = newValue!;
+                        });
+                        },
+                        items: _listData.map<DropdownMenuItem<String>>(
+                          (Map<String, dynamic> data) {
+                        return DropdownMenuItem<String>(
+                          value: data['nama_projek'],
+                          child: Text(data['nama_projek']),
+                        );
+                        }).toList(),
                       ),
-                      child: Text('Search'),
+                      SizedBox(width: 40),
+                      DropdownButton<int>(
+                        value: _selectedOption2,
+                        onChanged: (int? newValue) {
+                        setState(() {
+                          _selectedOption2 = newValue!;
+                        });
+                        },
+                        items: optionValues2
+                          .map<DropdownMenuItem<int>>((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text('${value ~/ 1000000} jt'),
+                        );
+                        }).toList(),
+                      ),
+                      SizedBox(width: 40),
+                      DropdownButton<int>(
+                        value: _selectedOption3,
+                        onChanged: (int? newValue) {
+                        setState(() {
+                          _selectedOption3 = newValue!;
+                        });
+                        },
+                        items: optionValues3
+                          .map<DropdownMenuItem<int>>((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text('${value ~/ 1000000000} Milyar'),
+                        );
+                        }).toList(),
+                      ),
+                      SizedBox(width: 40),
+                      ElevatedButton(
+                        onPressed: _sendDataToAPI,
+                        style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.black,
+                        ),
+                        child: Text('Search'),
+                      ),
+                      ],
                     ),
-                    ],
+                    ),
                   ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

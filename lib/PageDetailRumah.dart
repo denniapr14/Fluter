@@ -173,6 +173,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       home: Scaffold(
         appBar: AppBar(
@@ -241,7 +242,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                             SizedBox(height: 16.0),
                              (_dataDetailTipe['harga_tr'] ==null)?CircularProgressIndicator() : 
                             Container(
-                              width: 200,
+                              width: 160,
                               child: TextField(
                                 controller: hargaRumahController,
                                 decoration: InputDecoration(
@@ -252,7 +253,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                             ),
                             SizedBox(height: 16.0),
                             Container(
-                              width: 100, 
+                              width: 120, 
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

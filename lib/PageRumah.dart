@@ -292,6 +292,7 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
     }
     print(_listDataProjekCheckbox);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       home: Scaffold(
         appBar: AppBar(
