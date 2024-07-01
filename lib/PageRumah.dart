@@ -24,6 +24,8 @@ class PageRumah extends StatefulWidget {
 
 class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
   List<String> _selectedProjek = [];
+  int selectedMinHarga = 0;
+  int selectedMaxHarga = 0;
 
   @override
   bool _isSidebarVisible = true;
@@ -270,9 +272,13 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
     fetchData();
     _getDataProjek();
     _getVarTipeRumah();
-    _currentRangeValues = RangeValues(_sliderMulaiHarga.toDouble(), maxHargaRumah);
+    selectedMinHarga = int.tryParse(widget.option2) ?? 0;
+    selectedMaxHarga = int.tryParse(widget.option3) ?? 0;
+    _currentRangeValues = RangeValues(selectedMinHarga.toDouble(), selectedMaxHarga.toDouble());
     print("Range : ${_currentRangeValues}");
     _selectedProjek.add(widget.option1);
+    
+    
   }
   
   
