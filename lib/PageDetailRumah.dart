@@ -117,7 +117,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
 
   void _launchURL() async {
     String url =
-        'https://formsliving.com/simulation-detail-type/${_dataDetailTipe['id_tipe_rumah']}/${_dataDetailTipe['id_rumah']}';
+        'https://formsliving.com/simulation-detail-type/${_dataDetailTipe['id_rumah']}/${_dataDetailTipe['id_tipe_rumah']}';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
