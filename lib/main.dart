@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      
       title: 'Forms Living',
       theme: ThemeData(
         primaryColor: AppColors.color1,
@@ -86,10 +87,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class AppColors {
   static const Color color1 = Color(0xFF414037);
-  static const Color ButtonBg = Color.fromARGB(255, 1, 138, 113);
-  static const Color TextButton = Color.fromARGB(255, 255, 255, 255);
-  static const Color BgSlider = Color(0xFF585e68);
-   static const Color Slider = Color.fromARGB(255, 1, 138, 113);
+  static const Color ButtonBg = Color(0xFFC7EB57);
+  static const Color TextButton = Color(0Xff1E130E);
+  static const Color BgSlider = Color(0xFF686B5D);
+   static const Color Slider = Color(0xffAAC067);
+
+  //  #AAC067,
+  // #8B9669,
+  //#C7EB57, (buttton)
+  // #686B5D,
+  // #3D4131,
+  // #2E331E
 }
 
 class GlobalThemeData {
