@@ -474,7 +474,7 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                       onChanged: (value) {
                                      
                                       
-                                      OnSaved:
+                                      OnSaved: 
                                       (value) => _sliderMulaiHarga;
                                       
                                       },
