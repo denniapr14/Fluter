@@ -275,6 +275,7 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
     fetchData();
     _getDataProjek();
     _getVarTipeRumah();
+    // print()
     selectedMinHarga = int.tryParse(widget.option2) ?? 0;
     selectedMaxHarga = int.tryParse(widget.option3) ?? 0;
     _currentRangeValues =
@@ -476,7 +477,9 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                       
                                       OnSaved: 
                                       (value) => _sliderMulaiHarga;
-                                      
+                                       setState(() {
+                                        _sliderMulaiHarga = int.tryParse(value) ?? 0;
+                                      });
                                       },
                                       controller: _textMinHarga,
                                       keyboardType: TextInputType.number,
@@ -499,7 +502,11 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                         OnSaved:
                                         (value) => _sliderSelesaiHarga;
                                         // Handle the text input
+                                      setState(() {
+      _sliderSelesaiHarga = int.tryParse(value) ?? 0;
+    });
                                       },
+                                      
                                       controller: _textMaxHarga,
                                       keyboardType: TextInputType.number,
                                     ),
