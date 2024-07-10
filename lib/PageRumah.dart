@@ -74,7 +74,8 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
   List<Map<String, dynamic>> _listDataProjek = [];
   Map<String, dynamic> _listVarTipeRumah = {};
   TextEditingController _textMinHarga = TextEditingController();
-  
+  TextEditingController _textMaxHarga = TextEditingController();
+
   var _loadingCard = false;
   var kalmSelected = false;
 
@@ -262,6 +263,7 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
       print('Error fetching data: $e');
     }
   }
+
   RangeValues _currentRangeValues = RangeValues(10, 10000);
   @override
   void initState() {
@@ -275,13 +277,20 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
     _getVarTipeRumah();
     selectedMinHarga = int.tryParse(widget.option2) ?? 0;
     selectedMaxHarga = int.tryParse(widget.option3) ?? 0;
-    _currentRangeValues = RangeValues(selectedMinHarga.toDouble(), selectedMaxHarga.toDouble());
+    _currentRangeValues =
+        RangeValues(selectedMinHarga.toDouble(), selectedMaxHarga.toDouble());
     _textMinHarga.text = selectedMinHarga.toString();
+    _textMaxHarga.text = selectedMaxHarga.toString();
     print("Range : ${_currentRangeValues}");
     _selectedProjek.add(widget.option1);
   }
-  
-  
+  // void _handleMaxInput(String value) {
+  //   int maxInput = int.tryParse(value) ?? 0;
+  //   if (maxInput > 1000000) {
+  //     maxInput = 1000000;
+  //   }
+  //   _textMaxHarga.text = maxInput.toString();
+  // }
   // RangeValues _currentRangeValues = const RangeValues(0, 100);
   String formatToRupiah(String number) {
     final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ');
@@ -320,17 +329,16 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
           children: [
             AnimatedContainer(
               decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(
-                      color: AppColors.BgSlider,  // Customize the color here
-                      width: 2,             // Customize the width here
-                    ),
+                border: Border(
+                  right: BorderSide(
+                    color: AppColors.BgSlider, // Customize the color here
+                    width: 2, // Customize the width here
                   ),
                 ),
+              ),
               duration: const Duration(milliseconds: 200),
               width: _isSidebarVisible ? 400 : 72,
               child: Visibility(
-                
                 // visible: _isSidebarVisible,
                 child: ListView(
                   children: [
@@ -352,50 +360,62 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
 
                     Visibility(
                       visible: _isSidebarVisible,
-                      
                       child: Form(
                           key: _formKey,
                           child: Column(
                             children: [
                               Text("Project"),
 
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: _listDataProjekCheckbox.length,
-                                itemBuilder: (context, index) {
-                                  // print( "DataRumah : $_listDataRumah");
-                                  return CheckboxListTile(
-                                    activeColor: AppColors.Slider,
-                                    title: Text(_listDataProjekCheckbox[index]
-                                        ['nama_projek']),
-                                    value: _selectedProjek.contains(
-                                        _listDataProjek[index]['nama_projek']),
-                                    onChanged: (bool? value) {
-                                      if (_listDataProjekCheckbox[index]
-                                              ['checked'] ==
+                                Row(
+                                children: [
+                                  Padding(
+                                  padding: EdgeInsets.only(left: 35),
+                                  child: Container(
+                                    width: 200,
+                                    child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: _listDataProjekCheckbox.length,
+                                    itemBuilder: (context, index) {
+                                      return CheckboxListTile(
+                                      activeColor: AppColors.Slider,
+                                      title: Text(
+                                        _listDataProjekCheckbox[index]
+                                          ['nama_projek'],
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      value: _selectedProjek.contains(
+                                        _listDataProjek[index]
+                                          ['nama_projek']),
+                                      onChanged: (bool? value) {
+                                        if (_listDataProjekCheckbox[index]
+                                            ['checked'] ==
                                           false) {
                                         _selectedProjek.add(
-                                            _listDataProjekCheckbox[index]
-                                                ['nama_projek']);
+                                          _listDataProjekCheckbox[index]
+                                            ['nama_projek']);
                                         _listDataProjekCheckbox[index]
-                                            ['checked'] = true;
-                                      } else {
+                                          ['checked'] = true;
+                                        } else {
                                         _selectedProjek.remove(
-                                            _listDataProjekCheckbox[index]
-                                                ['nama_projek']);
+                                          _listDataProjekCheckbox[index]
+                                            ['nama_projek']);
                                         _listDataProjekCheckbox[index]
-                                            ['checked'] = false;
-                                      }
-                                      print(_selectedProjek);
-                                      setState(() {});
-                                      OnSaved:
-                                      (value) => _selectedProjek.toString();
-                                      print(
+                                          ['checked'] = false;
+                                        }
+                                        setState(() {});
+                                        OnSaved:
+                                        (value) =>
+                                          _selectedProjek.toString();
+                                        print(
                                           "Value Selected Projek $_selectedProjek");
+                                      },
+                                      );
                                     },
-                                  );
-                                },
-                              ),
+                                    ),
+                                  ),
+                                  ),
+                                ],
+                                ),
 
                               // CheckboxListTile(
                               //   title: Text('Kalm'),
@@ -409,47 +429,84 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                               //     setState(() {});
                               //   },
                               // ),
+                              SizedBox(height: 22),
                               Text('Range Price '),
-                            Container(
-                              width: 350,
-                              child: RangeSlider(
-                                values: _currentRangeValues,
-                                max: maxHargaRumah,
-                                divisions: 30,
-                                labels: RangeLabels(
-                                  formatToRupiah(_currentRangeValues.start.round().toString()),
-                                  formatToRupiah(_currentRangeValues.end.round().toString()),
-                                  // _currentRangeValues.end.round().toString(),
-                                ),
-                                onChanged: (RangeValues values) {
-                                  setState(() {
-                                    _currentRangeValues = values;
-                                    _sliderMulaiHarga = values.start.round();
-                                    _sliderSelesaiHarga = values.end.round();
-                                  });
-                                },
-                                activeColor: AppColors.Slider, // Change to desired color
-                                inactiveColor: AppColors.BgSlider,
-                              ),
-                            ),
-                            Container(
-                              width: 350,
-                              child: Row(
+                              // Container(
+                              //   width: 350,
+                              //   child: RangeSlider(
+                              //     values: _currentRangeValues,
+                              //     max: maxHargaRumah,
+                              //     divisions: 30,
+                              //     labels: RangeLabels(
+                              //       formatToRupiah(_currentRangeValues.start
+                              //           .round()
+                              //           .toString()),
+                              //       formatToRupiah(_currentRangeValues.end
+                              //           .round()
+                              //           .toString()),
+                              //       // _currentRangeValues.end.round().toString(),
+                              //     ),
+                              //     onChanged: (RangeValues values) {
+                              //       setState(() {
+                              //         _currentRangeValues = values;
+                              //         _sliderMulaiHarga = values.start.round();
+                              //         _sliderSelesaiHarga = values.end.round();
+                              //       });
+                              //     },
+                              //     activeColor: AppColors
+                              //         .Slider, // Change to desired color
+                              //     inactiveColor: AppColors.BgSlider,
+                              //   ),
+                              // ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  TextField(
-                                    decoration: InputDecoration(
+                                    Container(
+                                    width: 140,
+                                    child: TextField(
+                                      decoration: InputDecoration(
                                       hintText: 'Enter text',
+                                      focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: AppColors.BgSlider),
+                                      ),
+                                      ),
+                                      onChanged: (value) {
+                                     
+                                      
+                                      OnSaved:
+                                      (value) => _sliderMulaiHarga;
+                                      
+                                      },
+                                      controller: _textMinHarga,
+                                      keyboardType: TextInputType.number,
+                                     
+                                      
                                     ),
-                                    // onChanged: (value) {
-                                    //   // Handle the text input
-                                    // },
-                                    controller: _textMinHarga,
+                                    ),
+                                  Text(" - "),
+                                  Container(
+                                    width: 140,
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        hintText: 'Enter text',
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: AppColors.BgSlider),
+                                        ),
+                                      ),
+                                      onChanged: (value) {
+                                        OnSaved:
+                                        (value) => _sliderSelesaiHarga;
+                                        // Handle the text input
+                                      },
+                                      controller: _textMaxHarga,
+                                      keyboardType: TextInputType.number,
+                                    ),
                                   ),
-                                  Text("-"),
-                                  Text("text"),
                                 ],
                               ),
-                            ),
+
                               // RangeSlider(values: Ra, onChanged: onChanged)
                               // Text(
                               //     'Starting Price: ${formatToRupiah(_sliderMulaiHarga.toString())}'),
@@ -457,8 +514,8 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                               //   width: 350,
                               //   child: Slider(
                               //     value: _sliderMulaiHarga.toDouble(),
-                                  // activeColor: AppColors.Slider, // Change to desired color
-                                  // inactiveColor: AppColors.BgSlider,
+                              // activeColor: AppColors.Slider, // Change to desired color
+                              // inactiveColor: AppColors.BgSlider,
                               //     min: 0,
                               //     max: 100000000,
                               //     onChanged: (double value) {
@@ -471,7 +528,7 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                               //   ),
                               // ),
 
-                              // SizedBox(height: 22),
+                              SizedBox(height: 22),
                               // Text(
                               //     'Up to Price: ${formatToRupiah(_sliderSelesaiHarga.toString())}'),
                               // Container(
@@ -597,73 +654,91 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                           width: 350,
                                           child: Column(
                                             children: [
-                                                DropdownButtonFormField(
+                                              DropdownButtonFormField(
                                                 decoration: InputDecoration(
                                                   labelText: 'Foundation',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
                                                 items: [
                                                   DropdownMenuItem(
-                                                    child: Text('Batu Kali'),
-                                                    value: 'Batu Kali'),
+                                                      child: Text('Batu Kali'),
+                                                      value: 'Batu Kali'),
                                                   // Add more options as needed
                                                 ],
                                                 onChanged: (value) {
                                                   setState(() {
+                                                    _pondasiInput =
+                                                        value as String;
+                                                  });
+                                                },
+                                                onSaved: (value) {
                                                   _pondasiInput =
-                                                    value as String;
-                                                  });
+                                                      value as String;
                                                 },
-                                                onSaved: (value) {
-                                                  _pondasiInput = value as String;
-                                                },
-                                                ),
-                                              SizedBox(height: 22),
-                                                DropdownButtonFormField(
-                                                decoration: InputDecoration(
-                                                  labelText: 'Struktur',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
-                                                  ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
-                                                  ),
-                                                ),
-                                                items: [
-                                                  DropdownMenuItem(
-                                                    child:
-                                                      Text('Beton Bertulang'),
-                                                    value: 'Beton Bertulang'),
-                                                  // Add more options as needed
-                                                ],
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                  _strukturInput =
-                                                    value as String;
-                                                  });
-                                                },
-                                                onSaved: (value) {
-                                                  _strukturInput =
-                                                    value as String;
-                                                },
-                                                ),
+                                              ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-                                                 decoration: InputDecoration(
-                                                  labelText: 'Dinding Dalam',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                decoration: InputDecoration(
+                                                  labelText: 'Struktur',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                               
+                                                items: [
+                                                  DropdownMenuItem(
+                                                      child: Text(
+                                                          'Beton Bertulang'),
+                                                      value: 'Beton Bertulang'),
+                                                  // Add more options as needed
+                                                ],
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _strukturInput =
+                                                        value as String;
+                                                  });
+                                                },
+                                                onSaved: (value) {
+                                                  _strukturInput =
+                                                      value as String;
+                                                },
+                                              ),
+                                              SizedBox(height: 22),
+                                              DropdownButtonFormField(
+                                                decoration: InputDecoration(
+                                                  labelText: 'Dinding Dalam',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
+                                                  ),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
+                                                  ),
+                                                ),
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text(
@@ -685,16 +760,21 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-                                                 decoration: InputDecoration(
+                                                decoration: InputDecoration(
                                                   labelText: 'Dinding Luar',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                               
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text(
@@ -716,17 +796,22 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-                                                 decoration: InputDecoration(
+                                                decoration: InputDecoration(
                                                   labelText:
                                                       'Dinding Kamar Mandi',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                               
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text('Keramik'),
@@ -737,8 +822,8 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                                       value:
                                                           'Keramik (include tempat sabun tanam)'),
                                                   DropdownMenuItem(
-                                                      child:
-                                                          Text('Keramik 40 x 40'),
+                                                      child: Text(
+                                                          'Keramik 40 x 40'),
                                                       value: 'Keramik 40 x 40'),
                                                   // Add more options as needed
                                                 ],
@@ -755,16 +840,21 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-                                                 decoration: InputDecoration(
+                                                decoration: InputDecoration(
                                                   labelText: 'Meja Dapur',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                                
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text('Keramik'),
@@ -772,7 +862,8 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                                   DropdownMenuItem(
                                                       child: Text(
                                                           'Granitile 60 x 60'),
-                                                      value: 'Granitile 60 x 60'),
+                                                      value:
+                                                          'Granitile 60 x 60'),
                                                   // Add more options as needed
                                                 ],
                                                 onChanged: (value) {
@@ -788,16 +879,22 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-                                                 decoration: InputDecoration(
-                                                 labelText: 'Lantai Ruang Tidur',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                decoration: InputDecoration(
+                                                  labelText:
+                                                      'Lantai Ruang Tidur',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                               
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text('Granitile'),
@@ -805,7 +902,8 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                                   DropdownMenuItem(
                                                       child: Text(
                                                           'Granitile 60 x 60'),
-                                                      value: 'Granitile 60 x 60'),
+                                                      value:
+                                                          'Granitile 60 x 60'),
                                                   // Add more options as needed
                                                 ],
                                                 onChanged: (value) {
@@ -822,17 +920,21 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
                                                 decoration: InputDecoration(
-                                                   labelText:
+                                                  labelText:
                                                       'Lantai Ruang Keluarga',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                               
-                                               
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text('Granitile'),
@@ -840,7 +942,8 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                                   DropdownMenuItem(
                                                       child: Text(
                                                           'Granitile 60 x 60'),
-                                                      value: 'Granitile 60 x 60'),
+                                                      value:
+                                                          'Granitile 60 x 60'),
                                                   // Add more options as needed
                                                 ],
                                                 onChanged: (value) {
@@ -857,23 +960,28 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
                                                 decoration: InputDecoration(
-                                                    labelText:
+                                                  labelText:
                                                       'Dinding Kamar Mandi Utama',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                                
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text('Keramik'),
                                                       value: 'Keramik'),
                                                   DropdownMenuItem(
-                                                      child:
-                                                          Text('Keramik 40 x 40'),
+                                                      child: Text(
+                                                          'Keramik 40 x 40'),
                                                       value: 'Keramik 40 x 40'),
                                                   // Add more options as needed
                                                 ],
@@ -885,24 +993,29 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-
                                                 decoration: InputDecoration(
-                                                   labelText: 'Lantai Teras Utama',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  labelText:
+                                                      'Lantai Teras Utama',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                                
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text('Granitile'),
                                                       value: 'Granitile'),
                                                   DropdownMenuItem(
-                                                      child:
-                                                          Text('Keramik 40 x 40'),
+                                                      child: Text(
+                                                          'Keramik 40 x 40'),
                                                       value: 'Keramik 40 x 40'),
                                                   // Add more options as needed
                                                 ],
@@ -919,16 +1032,21 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-                                                 decoration: InputDecoration(
-                                                   labelText: 'Rangka Atap',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                decoration: InputDecoration(
+                                                  labelText: 'Rangka Atap',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                               
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text('Galvalum'),
@@ -948,20 +1066,25 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-                                                 decoration: InputDecoration(
-                                                   labelText: 'Penutup Atap',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                decoration: InputDecoration(
+                                                  labelText: 'Penutup Atap',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                               
                                                 items: [
                                                   DropdownMenuItem(
-                                                      child:
-                                                          Text('Genteng M-Class'),
+                                                      child: Text(
+                                                          'Genteng M-Class'),
                                                       value: 'Genteng M-Class'),
                                                   // Add more options as needed
                                                 ],
@@ -979,16 +1102,21 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
                                                 isExpanded: true,
-                                                  decoration: InputDecoration(
-                                                   labelText: 'Kusen',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                decoration: InputDecoration(
+                                                  labelText: 'Kusen',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                                
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text('Alumunium'),
@@ -1009,7 +1137,8 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                                 ],
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    _kusenInput = value as String;
+                                                    _kusenInput =
+                                                        value as String;
                                                   });
                                                 },
                                                 onSaved: (value) {
@@ -1020,15 +1149,20 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               DropdownButtonFormField(
                                                 isExpanded: true,
                                                 decoration: InputDecoration(
-                                                   labelText: 'Daun Pintu',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  labelText: 'Daun Pintu',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                                
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text(
@@ -1059,15 +1193,20 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               DropdownButtonFormField(
                                                 isExpanded: true,
                                                 decoration: InputDecoration(
-                                                    labelText: 'Sanitary',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  labelText: 'Sanitary',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                              
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text(
@@ -1082,8 +1221,8 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                                       value:
                                                           'America Standard & Onda / Setara'),
                                                   DropdownMenuItem(
-                                                      child:
-                                                          Text('Artisan (black)'),
+                                                      child: Text(
+                                                          'Artisan (black)'),
                                                       value: 'Artisan (black)'),
                                                   // Add more options as needed
                                                 ],
@@ -1100,16 +1239,21 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-                                                 decoration: InputDecoration(
-                                                   labelText: 'Plafon Dalam',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                decoration: InputDecoration(
+                                                  labelText: 'Plafon Dalam',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                               
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text('Gypsum'),
@@ -1130,15 +1274,20 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
                                                 decoration: InputDecoration(
-                                                    labelText: 'Handle',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  labelText: 'Handle',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                              
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text('Artisan'),
@@ -1149,7 +1298,8 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                                       value:
                                                           'Artisan (Matte Black)'),
                                                   DropdownMenuItem(
-                                                      child: Text('ELT / Setara'),
+                                                      child:
+                                                          Text('ELT / Setara'),
                                                       value: 'ELT / Setara'),
                                                   // Add more options as needed
                                                 ],
@@ -1160,21 +1310,27 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                                   });
                                                 },
                                                 onSaved: (value) {
-                                                  _handleInput = value as String;
+                                                  _handleInput =
+                                                      value as String;
                                                 },
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
                                                 decoration: InputDecoration(
-                                                    labelText: 'Lighting',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  labelText: 'Lighting',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                               
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text(
@@ -1196,21 +1352,27 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-                                                  decoration: InputDecoration(
-                                                    labelText: 'Daya Listrik',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                decoration: InputDecoration(
+                                                  labelText: 'Daya Listrik',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                                
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text(
                                                           '1300 VA / 2200 VA'),
-                                                      value: '1300 VA / 2200 VA'),
+                                                      value:
+                                                          '1300 VA / 2200 VA'),
                                                   DropdownMenuItem(
                                                       child: Text('2200 VA'),
                                                       value: '2200 VA'),
@@ -1232,28 +1394,35 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-                                                 decoration: InputDecoration(
-                                                   labelText: 'Carport',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                decoration: InputDecoration(
+                                                  labelText: 'Carport',
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                               
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text(
                                                           'White Coral stone'),
-                                                      value: 'White Coral stone'),
+                                                      value:
+                                                          'White Coral stone'),
                                                   DropdownMenuItem(
                                                       child: Text('Ampyang'),
                                                       value: 'Ampyang'),
                                                   DropdownMenuItem(
                                                       child: Text(
                                                           'Multicolour stone'),
-                                                      value: 'Multicolour stone'),
+                                                      value:
+                                                          'Multicolour stone'),
                                                   // Add more options as needed
                                                 ],
                                                 onChanged: (value) {
@@ -1263,21 +1432,27 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                                   });
                                                 },
                                                 onSaved: (value) {
-                                                  _carportInput = value as String;
+                                                  _carportInput =
+                                                      value as String;
                                                 },
                                               ),
                                               SizedBox(height: 22),
                                               DropdownButtonFormField(
-                                                  decoration: InputDecoration(
+                                                decoration: InputDecoration(
                                                   labelText: 'Tangga',
-                                                  enabledBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
-                                                  focusedBorder: UnderlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.transparent),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Colors.transparent),
                                                   ),
                                                 ),
-                                               
                                                 items: [
                                                   DropdownMenuItem(
                                                       child: Text(
@@ -1293,7 +1468,8 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                                   });
                                                 },
                                                 onSaved: (value) {
-                                                  _tanggaInput = value as String;
+                                                  _tanggaInput =
+                                                      value as String;
                                                 },
                                               ),
                                             ],
@@ -1335,7 +1511,6 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                 ),
               ),
             ),
-           
             Expanded(
               child: Column(
                 children: [
