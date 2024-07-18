@@ -265,6 +265,39 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
   }
 
   RangeValues _currentRangeValues = RangeValues(10, 10000);
+
+  // void _handleMaxInput(String value) {
+  //   int maxInput = int.tryParse(value) ?? 0;
+  //   if (maxInput > 1000000) {
+  //     maxInput = 1000000;
+  //   }
+  //   _textMaxHarga.text = maxInput.toString();
+  // }
+  // RangeValues _currentRangeValues = const RangeValues(0, 100);
+  String formatToRupiah(String number) {
+    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ');
+    return formatter.format(int.parse(number));
+  }
+
+  String sparateEveryThreeChars(String input) {
+    StringBuffer result = StringBuffer();
+    String reversedInput = input.split('').reversed.join('');
+
+    for (int i = 0; i < reversedInput.length; i += 3) {
+      if (i + 3 < reversedInput.length) {
+        result.write(reversedInput.substring(i, i + 3) + '.');
+      } else {
+        result.write(reversedInput.substring(i));
+      }
+    }
+
+    return result.toString().split('').reversed.join('');
+  }
+
+  String removeDots(String input) {
+    return input.replaceAll('.', '');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -280,22 +313,10 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
     selectedMaxHarga = int.tryParse(widget.option3) ?? 0;
     _currentRangeValues =
         RangeValues(selectedMinHarga.toDouble(), selectedMaxHarga.toDouble());
-    _textMinHarga.text = selectedMinHarga.toString();
-    _textMaxHarga.text = selectedMaxHarga.toString();
+    _textMinHarga.text = sparateEveryThreeChars(selectedMinHarga.toString());
+    _textMaxHarga.text = sparateEveryThreeChars(selectedMaxHarga.toString());
     print("Range : ${_currentRangeValues}");
     _selectedProjek.add(widget.option1);
-  }
-  // void _handleMaxInput(String value) {
-  //   int maxInput = int.tryParse(value) ?? 0;
-  //   if (maxInput > 1000000) {
-  //     maxInput = 1000000;
-  //   }
-  //   _textMaxHarga.text = maxInput.toString();
-  // }
-  // RangeValues _currentRangeValues = const RangeValues(0, 100);
-  String formatToRupiah(String number) {
-    final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ');
-    return formatter.format(int.parse(number));
   }
 
   Widget build(BuildContext context) {
@@ -323,7 +344,7 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
           title: Text('Search'),
           centerTitle: true,
           actions: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
+            // IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
           ],
         ),
         body: Row(
@@ -367,56 +388,74 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                             children: [
                               Text("Project"),
 
-                                Row(
+                              Row(
+                                 mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
                                 children: [
                                   Padding(
-                                  padding: EdgeInsets.only(left: 35),
-                                  child: Container(
-                                    width: 200,
-                                    child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: _listDataProjekCheckbox.length,
-                                    itemBuilder: (context, index) {
-                                      return CheckboxListTile(
-                                      activeColor: AppColors.Slider,
-                                      title: Text(
-                                        _listDataProjekCheckbox[index]
-                                          ['nama_projek'],
-                                        textAlign: TextAlign.left,
+                                    padding: EdgeInsets.only(left: 35),
+                                    child: Container(
+                                      width: 200,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount:
+                                            _listDataProjekCheckbox.length,
+                                        itemBuilder: (context, index) {
+                                          return ListTile(
+                                            title: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .center,
+                                              children: [
+                                                 Checkbox(
+                                                  activeColor: AppColors.Slider,
+                                                  value: _selectedProjek.contains(
+                                                      _listDataProjekCheckbox[
+                                                              index]
+                                                          ['nama_projek']),
+                                                  onChanged: (bool? value) {
+                                                    if (_listDataProjekCheckbox[
+                                                            index]['checked'] ==
+                                                        false) {
+                                                      _selectedProjek.add(
+                                                          _listDataProjekCheckbox[
+                                                                  index]
+                                                              ['nama_projek']);
+                                                      _listDataProjekCheckbox[
+                                                              index]
+                                                          ['checked'] = true;
+                                                    } else {
+                                                      _selectedProjek.remove(
+                                                          _listDataProjekCheckbox[
+                                                                  index]
+                                                              ['nama_projek']);
+                                                      _listDataProjekCheckbox[
+                                                              index]
+                                                          ['checked'] = false;
+                                                    }
+                                                    setState(() {});
+                                                    print(
+                                                        "Value Selected Projek $_selectedProjek");
+                                                  },
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    _listDataProjekCheckbox[
+                                                        index]['nama_projek'],
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                                ),
+                                               
+                                              ],
+                                            ),
+                                          );
+                                        },
                                       ),
-                                      value: _selectedProjek.contains(
-                                        _listDataProjek[index]
-                                          ['nama_projek']),
-                                      onChanged: (bool? value) {
-                                        if (_listDataProjekCheckbox[index]
-                                            ['checked'] ==
-                                          false) {
-                                        _selectedProjek.add(
-                                          _listDataProjekCheckbox[index]
-                                            ['nama_projek']);
-                                        _listDataProjekCheckbox[index]
-                                          ['checked'] = true;
-                                        } else {
-                                        _selectedProjek.remove(
-                                          _listDataProjekCheckbox[index]
-                                            ['nama_projek']);
-                                        _listDataProjekCheckbox[index]
-                                          ['checked'] = false;
-                                        }
-                                        setState(() {});
-                                        OnSaved:
-                                        (value) =>
-                                          _selectedProjek.toString();
-                                        print(
-                                          "Value Selected Projek $_selectedProjek");
-                                      },
-                                      );
-                                    },
                                     ),
                                   ),
-                                  ),
                                 ],
-                                ),
+                              ),
 
                               // CheckboxListTile(
                               //   title: Text('Kalm'),
@@ -462,17 +501,19 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                    Container(
+                                  Container(
                                     width: 140,
                                     child: TextField(
                                       decoration: InputDecoration(
-                                      hintText: 'Enter text',
-                                      focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: AppColors.BgSlider),
-                                      ),
+                                          border: OutlineInputBorder(),
+                                        hintText: 'Enter text',
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.transparent),
+                                        ),
                                       ),
                                       onChanged: (value) {
+<<<<<<< Updated upstream
                                      
                                       
                                       OnSaved: 
@@ -480,31 +521,71 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                        setState(() {
                                         _sliderMulaiHarga = int.tryParse(value) ?? 0;
                                       });
+=======
+                                        String newValue = removeDots(value);
+                                        newValue =
+                                            sparateEveryThreeChars(newValue);
+                                        _textMinHarga.value =
+                                            _textMinHarga.value.copyWith(
+                                          text: newValue,
+                                          selection: TextSelection.collapsed(
+                                              offset: newValue.length),
+                                        );
+
+                                        OnSaved:
+                                        (value) => removeDots(
+                                            _sliderMulaiHarga.toString());
+                                        // (value) => removeDots(
+                                        // _sliderMulaiHarga.toString());
+                                        setState(() {
+                                          _sliderMulaiHarga =
+                                              int.tryParse(removeDots(value)) ??
+                                                  0;
+                                        });
+>>>>>>> Stashed changes
                                       },
                                       controller: _textMinHarga,
                                       keyboardType: TextInputType.number,
-                                     
-                                      
                                     ),
-                                    ),
+                                  ),
                                   Text(" - "),
                                   Container(
                                     width: 140,
                                     child: TextField(
                                       decoration: InputDecoration(
+                                         border: OutlineInputBorder(),
                                         hintText: 'Enter text',
                                         focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: AppColors.BgSlider),
+                                              color: Colors.transparent),
                                         ),
                                       ),
                                       onChanged: (value) {
+                                        String newValue = removeDots(value);
+                                        newValue =
+                                            sparateEveryThreeChars(newValue);
+                                        _textMaxHarga.value =
+                                            _textMaxHarga.value.copyWith(
+                                          text: newValue,
+                                          selection: TextSelection.collapsed(
+                                              offset: newValue.length),
+                                        );
+
                                         OnSaved:
-                                        (value) => _sliderSelesaiHarga;
+                                        (value) => removeDots(
+                                            _sliderSelesaiHarga.toString());
                                         // Handle the text input
+<<<<<<< Updated upstream
                                       setState(() {
       _sliderSelesaiHarga = int.tryParse(value) ?? 0;
     });
+=======
+                                        setState(() {
+                                          _sliderSelesaiHarga =
+                                              int.tryParse(removeDots(value)) ??
+                                                  0;
+                                        });
+>>>>>>> Stashed changes
                                       },
                                       
                                       controller: _textMaxHarga,

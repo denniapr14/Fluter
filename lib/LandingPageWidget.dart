@@ -190,8 +190,8 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                             ElevatedButton(
                             onPressed: _sendDataToAPI,
                             style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.black,
+                              foregroundColor: AppColors.TextButton,
+                              backgroundColor: AppColors.ButtonBg,
                             ),
                             child: Text('Search'),
                             ),

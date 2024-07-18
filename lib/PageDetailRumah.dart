@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:math'; // Import the dart:math library
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
   final TextEditingController jangkaWaktuController =
       TextEditingController(text: '10');
   bool _isSidebarVisible = true;
+  late double hargaRumah;
   Map<String, dynamic> _dataDetailTipe = {};
   double _monthlyPayment = 0.0; // State variable to store the monthly payment
   double _uangMukaAmount = 0.0;
@@ -90,10 +92,28 @@ class _PageDetailRumahState extends State<PageDetailRumah>
       print('Error fetching data: $e');
     }
   }
+  String sparateEveryThreeChars(String input) {
+    StringBuffer result = StringBuffer();
+    String reversedInput = input.split('').reversed.join('');
+
+    for (int i = 0; i < reversedInput.length; i += 3) {
+      if (i + 3 < reversedInput.length) {
+        result.write(reversedInput.substring(i, i + 3) + '.');
+      } else {
+        result.write(reversedInput.substring(i));
+      }
+    }
+
+    return result.toString().split('').reversed.join('');
+  }
+
+  String removeDots(String input) {
+    return input.replaceAll('.', '');
+  }
 
   void hitungSimulasiKPR() {
     // Fetch values from the TextEditingControllers
-    double hargaRumah = double.parse(hargaRumahController.text);
+    double hargaRumah = double.parse(removeDots(hargaRumahController.text));
     double uangMuka = double.parse(uangMukaController.text);
     double sukuBunga = double.parse(sukuBungaController.text);
     int jangkaWaktu = int.parse(jangkaWaktuController.text);
@@ -113,6 +133,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
       _sukuBunga = sukuBunga;
       _jangkaWaktu = jangkaWaktu;
     });
+    
   }
 
   void _launchURL() async {
@@ -133,6 +154,9 @@ class _PageDetailRumahState extends State<PageDetailRumah>
       _getDataDenah();
       print(_listDataDenah);
       print('index tipe rumah : ${widget.index}');
+      hargaRumahController.text =
+          sparateEveryThreeChars(_dataDetailTipe['harga_tr'].toString());
+      hargaRumah = _dataDetailTipe['harga_tr'];
     });
 
     _AnimationController = AnimationController(
@@ -153,6 +177,8 @@ class _PageDetailRumahState extends State<PageDetailRumah>
     print('index tipe rumah : ${widget.index}');
   }
 
+  
+
   String formatRupiah(double amount) {
     final NumberFormat formatCurrency = NumberFormat.currency(
       locale: 'id_ID',
@@ -162,10 +188,11 @@ class _PageDetailRumahState extends State<PageDetailRumah>
     return formatCurrency.format(amount);
   }
 
- String formatToRupiah(String number) {
+  String formatToRupiah(String number) {
     final formatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ');
     return formatter.format(int.parse(number));
   }
+
   double roundUpToThousands(double value) {
     return (value / 1000).ceil() * 1000;
   }
@@ -185,24 +212,26 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                 Icons.arrow_back,
                 size: 30,
               )),
-          title: (_dataDetailTipe['nama_cluster'] ==null)?CircularProgressIndicator() : Text(
-              "${_dataDetailTipe['blok']} - ${_dataDetailTipe['nomor']} / ${_dataDetailTipe['nama_cluster']}"),
+          title: (_dataDetailTipe['nama_cluster'] == null)
+              ? CircularProgressIndicator()
+              : Text(
+                  "${_dataDetailTipe['blok']} - ${_dataDetailTipe['nomor']} / ${_dataDetailTipe['nama_cluster']}"),
           centerTitle: true,
           actions: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
+            // IconButton(onPressed: () {}, icon: Icon(Icons.notifications))
           ],
         ),
-        body:  Row(
+        body: Row(
           children: [
             AnimatedContainer(
               decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(
-                      color: AppColors.BgSlider,  // Customize the color here
-                      width: 2,             // Customize the width here
-                    ),
+                border: Border(
+                  right: BorderSide(
+                    color: AppColors.BgSlider, // Customize the color here
+                    width: 2, // Customize the width here
                   ),
                 ),
+              ),
               duration: const Duration(milliseconds: 200),
               width: _isSidebarVisible ? 400 : 72,
               child: Visibility(
@@ -228,9 +257,9 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                       visible: _isSidebarVisible,
                       child: Container(
                         padding: EdgeInsets.fromLTRB(40, 0, 20, 0),
-                        alignment: Alignment.centerLeft,
+                        alignment: Alignment.center,
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          
                           children: [
                             Text(
                               'Simulation KPR',
@@ -240,29 +269,46 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                               ),
                             ),
                             SizedBox(height: 16.0),
-                             (_dataDetailTipe['harga_tr'] ==null)?CircularProgressIndicator() : 
-                            Container(
-                              width: 160,
-                              child: TextField(
-                                controller: hargaRumahController,
-                                decoration: InputDecoration(
-                                  labelText: 'Price',
-                                  border: OutlineInputBorder(),
-                                ),
-                              ),
-                            ),
+                            (_dataDetailTipe['harga_tr'] == null)
+                                ? CircularProgressIndicator()
+                                : Container(
+                                    width: 160,
+                                    child: TextField(
+                                      onChanged: (value) {
+                                        String cleanedText = removeDots(value);
+                                        String formattedText =
+                                            sparateEveryThreeChars(cleanedText);
+                                        hargaRumahController.value =
+                                            TextEditingValue(
+                                          text: formattedText,
+                                          selection: TextSelection.collapsed(
+                                              offset: formattedText.length),
+                                        );
+                                        // setState(() {
+                                        //   hargaRumah = double.tryParse(
+                                        //           removeDots(value)) ??
+                                        //       0.0;
+                                        // });
+                                      },
+                                      controller: hargaRumahController,
+                                      decoration: InputDecoration(
+                                        labelText: 'Price',
+                                        //  border: InputBorder.none,
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ),
                             SizedBox(height: 16.0),
                             Container(
-                              width: 120, 
+                              width: 120,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  
                                   TextField(
                                     controller: uangMukaController,
                                     decoration: InputDecoration(
                                       labelText: 'Down Payment (%)',
-                                      border: OutlineInputBorder(),
+                                        border: OutlineInputBorder(),
                                     ),
                                   ),
                                   SizedBox(height: 16.0),
@@ -270,7 +316,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                                     controller: sukuBungaController,
                                     decoration: InputDecoration(
                                       labelText: 'Interest (%)',
-                                      border: OutlineInputBorder(),
+                                        border: OutlineInputBorder(),
                                     ),
                                   ),
                                   SizedBox(height: 16.0),
@@ -278,7 +324,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                                     controller: jangkaWaktuController,
                                     decoration: InputDecoration(
                                       labelText: 'Time period (Year)',
-                                      border: OutlineInputBorder(),
+                                        border: OutlineInputBorder(),
                                     ),
                                   ),
                                 ],
@@ -286,15 +332,15 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                             ),
                             SizedBox(height: 16.0),
                             ElevatedButton(
-                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.ButtonBg,
-                                ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.ButtonBg,
+                              ),
                               onPressed: () {
-                              hitungSimulasiKPR();
+                                hitungSimulasiKPR();
                               },
                               child: Text(
-                              'Calculate',
-                              style: TextStyle(color: AppColors.TextButton),
+                                'Calculate',
+                                style: TextStyle(color: AppColors.TextButton),
                               ),
                             ),
                             SizedBox(height: 8.0),
@@ -344,19 +390,21 @@ class _PageDetailRumahState extends State<PageDetailRumah>
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
-                  children: [  (_dataDetailTipe['img_tr'] ==null)?CircularProgressIndicator() :
-                    Container(
-                      width: 700,
-                      margin: EdgeInsets.all(16.0),
-                      // width: MediaQuery.of(context).size.width * 0.8,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20.0),
-                        child:   Image.network(
-                          'https://formsliving.com/Home/images/tipe/${_dataDetailTipe['img_tr']}',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                  children: [
+                    (_dataDetailTipe['img_tr'] == null)
+                        ? CircularProgressIndicator()
+                        : Container(
+                            width: 700,
+                            margin: EdgeInsets.all(16.0),
+                            // width: MediaQuery.of(context).size.width * 0.8,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20.0),
+                              child: Image.network(
+                                'https://formsliving.com/Home/images/tipe/${_dataDetailTipe['img_tr']}',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
 
                     // Text below the image
                     Padding(
@@ -369,37 +417,39 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: 
-                                 (_dataDetailTipe['jenis_tr'] ==null)?CircularProgressIndicator() :
-                                Text(
-                                  'Tipe ${_dataDetailTipe['jenis_tr'].toString()}',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                                child: (_dataDetailTipe['jenis_tr'] == null)
+                                    ? CircularProgressIndicator()
+                                    : Text(
+                                        'Tipe ${_dataDetailTipe['jenis_tr'].toString()}',
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                               ),
                               Row(
                                 children: [
                                   Icon(Icons.bathtub, size: 24.0),
-                                   (_dataDetailTipe['kmr_mandi_tr'] ==null)?CircularProgressIndicator() :
-                                  Text(
-                                      ' ' +
-                                          _dataDetailTipe['kmr_mandi_tr']
-                                              .toString(),
-                                      style: TextStyle(
-                                          fontSize: 24.0,
-                                          fontWeight: FontWeight.bold)),
+                                  (_dataDetailTipe['kmr_mandi_tr'] == null)
+                                      ? CircularProgressIndicator()
+                                      : Text(
+                                          ' ' +
+                                              _dataDetailTipe['kmr_mandi_tr']
+                                                  .toString(),
+                                          style: TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold)),
                                   SizedBox(width: 16.0),
                                   Icon(Icons.bed, size: 24.0),
-                                  (_dataDetailTipe['kmr_tidur_tr'] ==null)?CircularProgressIndicator() :
-                                  Text(
-                                      ' ' +
-                                          _dataDetailTipe['kmr_tidur_tr']
-                                              .toString(),
-                                      style: TextStyle(
-                                          fontSize: 24.0,
-                                          fontWeight: FontWeight.bold)),
+                                  (_dataDetailTipe['kmr_tidur_tr'] == null)
+                                      ? CircularProgressIndicator()
+                                      : Text(
+                                          ' ' +
+                                              _dataDetailTipe['kmr_tidur_tr']
+                                                  .toString(),
+                                          style: TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold)),
                                 ],
                               )
                             ],
@@ -407,11 +457,13 @@ class _PageDetailRumahState extends State<PageDetailRumah>
 
                           // Icons for bath and room
                           Spacer(),
-                          (_dataDetailTipe['harga_tr'] ==null)?CircularProgressIndicator() : 
-                            Padding(
-                              padding: EdgeInsets.only(right: 42),
-                              child: Text(formatToRupiah(_dataDetailTipe['harga_tr'])),
-                            ),
+                          (_dataDetailTipe['harga_tr'] == null)
+                              ? CircularProgressIndicator()
+                              : Padding(
+                                  padding: EdgeInsets.only(right: 42),
+                                  child: Text(formatToRupiah(
+                                      _dataDetailTipe['harga_tr'])),
+                                ),
                         ],
                       ),
                     ),
@@ -441,17 +493,22 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                                         return Container(
                                           margin: EdgeInsets.all(8.0),
                                           child: InteractiveViewer(
-                                            child:  (_dataDetailTipe['img_rumah'] ==null)? const CircularProgressIndicator() : 
-                                            Image.network(
-                                              "https://formsliving.com/Home/images/denah/${_listDataDenah[index]['img_rumah']}",
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (BuildContext context,
-                                                      Object exception,
-                                                      StackTrace? stackTrace) {
-                                                return Text('Image not found');
-                                              },
-                                            ),
+                                            child: (_dataDetailTipe[
+                                                        'img_rumah'] ==
+                                                    null)
+                                                ? const CircularProgressIndicator()
+                                                : Image.network(
+                                                    "https://formsliving.com/Home/images/denah/${_listDataDenah[index]['img_rumah']}",
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder:
+                                                        (BuildContext context,
+                                                            Object exception,
+                                                            StackTrace?
+                                                                stackTrace) {
+                                                      return Text(
+                                                          'Image not found');
+                                                    },
+                                                  ),
                                           ),
                                         );
                                       },
