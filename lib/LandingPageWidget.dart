@@ -103,7 +103,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: NetworkImage(
-                      'https://images.pexels.com/photos/1261728/pexels-photo-1261728.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
+                      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTZ8fHxlbnwwfHx8fHw%3D'),
                   fit: BoxFit.cover,
                 ),
               ),

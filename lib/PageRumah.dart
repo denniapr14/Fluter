@@ -308,7 +308,6 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
     fetchData();
     _getDataProjek();
     _getVarTipeRumah();
-    // print()
     selectedMinHarga = int.tryParse(widget.option2) ?? 0;
     selectedMaxHarga = int.tryParse(widget.option3) ?? 0;
     _currentRangeValues =
@@ -513,15 +512,6 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                         ),
                                       ),
                                       onChanged: (value) {
-<<<<<<< Updated upstream
-                                     
-                                      
-                                      OnSaved: 
-                                      (value) => _sliderMulaiHarga;
-                                       setState(() {
-                                        _sliderMulaiHarga = int.tryParse(value) ?? 0;
-                                      });
-=======
                                         String newValue = removeDots(value);
                                         newValue =
                                             sparateEveryThreeChars(newValue);
@@ -542,7 +532,6 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                               int.tryParse(removeDots(value)) ??
                                                   0;
                                         });
->>>>>>> Stashed changes
                                       },
                                       controller: _textMinHarga,
                                       keyboardType: TextInputType.number,
@@ -575,19 +564,12 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                         (value) => removeDots(
                                             _sliderSelesaiHarga.toString());
                                         // Handle the text input
-<<<<<<< Updated upstream
-                                      setState(() {
-      _sliderSelesaiHarga = int.tryParse(value) ?? 0;
-    });
-=======
                                         setState(() {
                                           _sliderSelesaiHarga =
                                               int.tryParse(removeDots(value)) ??
                                                   0;
                                         });
->>>>>>> Stashed changes
                                       },
-                                      
                                       controller: _textMaxHarga,
                                       keyboardType: TextInputType.number,
                                     ),
