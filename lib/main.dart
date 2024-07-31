@@ -91,7 +91,7 @@ class AppColors {
   static const Color TextButton = Color(0Xff1E130E);
   static const Color BgSlider = Color(0xFF686B5D);
    static const Color Slider = Color(0xffAAC067);
-
+  static const Color TextColor = Color.fromARGB(255, 228, 228, 228);
   //  #AAC067,
   // #8B9669,
   //#C7EB57, (buttton)

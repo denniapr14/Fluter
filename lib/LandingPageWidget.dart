@@ -101,13 +101,16 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
           children: [
             Container(
               decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
                 image: DecorationImage(
                   image: NetworkImage(
-                      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTZ8fHxlbnwwfHx8fHw%3D'),
+                      'https://images.pexels.com/photos/1261728/pexels-photo-1261728.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
                   fit: BoxFit.cover,
                 ),
               ),
+              
               child: Scaffold(
+                
                 backgroundColor: Colors.transparent,
                 body: Center(
                   child: Column(
@@ -131,7 +134,7 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                         ).animate(_landingControllerContainer),
                         child: Container(
                           decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.TextButton,
                           borderRadius: BorderRadius.circular(40),
                           ),
                           width: 700,
@@ -146,11 +149,16 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                               _selectedOption1 = newValue!;
                               });
                             },
+                            dropdownColor: AppColors.TextButton,
                             items: _listData.map<DropdownMenuItem<String>>(
                               (Map<String, dynamic> data) {
                               return DropdownMenuItem<String>(
                               value: data['nama_projek'],
-                              child: Text(data['nama_projek']),
+                              child: Text(
+                                data['nama_projek'],
+                                style: TextStyle(color: AppColors.TextColor),
+                              ),
+                              
                               );
                             }).toList(),
                             ),
@@ -162,11 +170,15 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                               _selectedOption2 = newValue!;
                               });
                             },
+                            dropdownColor: AppColors.TextButton,
                             items: optionValues2
                               .map<DropdownMenuItem<int>>((int value) {
                               return DropdownMenuItem<int>(
                               value: value,
-                              child: Text('${value ~/ 1000000} jt'),
+                              child: Text(
+                                '${value ~/ 1000000} jt',
+                                style: TextStyle(color: AppColors.TextColor)
+                              ),
                               );
                             }).toList(),
                             ),
@@ -178,11 +190,14 @@ class _LandingPageWidgetState extends State<LandingPageWidget>
                               _selectedOption3 = newValue!;
                               });
                             },
+                            dropdownColor: AppColors.TextButton,
                             items: optionValues3
                               .map<DropdownMenuItem<int>>((int value) {
                               return DropdownMenuItem<int>(
                               value: value,
-                              child: Text('${value ~/ 1000000000} Milyar'),
+                              child: Text('${value ~/ 1000000000} Milyar',style: TextStyle(color: AppColors.TextColor),
+                              ),
+                              
                               );
                             }).toList(),
                             ),

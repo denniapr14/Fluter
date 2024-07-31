@@ -392,65 +392,62 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                                                   MainAxisAlignment
                                                       .center,
                                 children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 35),
-                                    child: Container(
-                                      width: 200,
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount:
-                                            _listDataProjekCheckbox.length,
-                                        itemBuilder: (context, index) {
-                                          return ListTile(
-                                            title: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .center,
-                                              children: [
-                                                 Checkbox(
-                                                  activeColor: AppColors.Slider,
-                                                  value: _selectedProjek.contains(
-                                                      _listDataProjekCheckbox[
-                                                              index]
-                                                          ['nama_projek']),
-                                                  onChanged: (bool? value) {
-                                                    if (_listDataProjekCheckbox[
-                                                            index]['checked'] ==
-                                                        false) {
-                                                      _selectedProjek.add(
-                                                          _listDataProjekCheckbox[
-                                                                  index]
-                                                              ['nama_projek']);
-                                                      _listDataProjekCheckbox[
-                                                              index]
-                                                          ['checked'] = true;
-                                                    } else {
-                                                      _selectedProjek.remove(
-                                                          _listDataProjekCheckbox[
-                                                                  index]
-                                                              ['nama_projek']);
-                                                      _listDataProjekCheckbox[
-                                                              index]
-                                                          ['checked'] = false;
-                                                    }
-                                                    setState(() {});
-                                                    print(
-                                                        "Value Selected Projek $_selectedProjek");
-                                                  },
-                                                ),
-                                                Expanded(
-                                                  child: Text(
+                                  Container(
+                                    width: 200,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount:
+                                          _listDataProjekCheckbox.length,
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .center,
+                                            children: [
+                                               Checkbox(
+                                                activeColor: AppColors.Slider,
+                                                value: _selectedProjek.contains(
                                                     _listDataProjekCheckbox[
-                                                        index]['nama_projek'],
-                                                    textAlign: TextAlign.left,
-                                                  ),
+                                                            index]
+                                                        ['nama_projek']),
+                                                onChanged: (bool? value) {
+                                                  if (_listDataProjekCheckbox[
+                                                          index]['checked'] ==
+                                                      false) {
+                                                    _selectedProjek.add(
+                                                        _listDataProjekCheckbox[
+                                                                index]
+                                                            ['nama_projek']);
+                                                    _listDataProjekCheckbox[
+                                                            index]
+                                                        ['checked'] = true;
+                                                  } else {
+                                                    _selectedProjek.remove(
+                                                        _listDataProjekCheckbox[
+                                                                index]
+                                                            ['nama_projek']);
+                                                    _listDataProjekCheckbox[
+                                                            index]
+                                                        ['checked'] = false;
+                                                  }
+                                                  setState(() {});
+                                                  print(
+                                                      "Value Selected Projek $_selectedProjek");
+                                                },
+                                              ),
+                                              Expanded(
+                                                child: Text(
+                                                  _listDataProjekCheckbox[
+                                                      index]['nama_projek'],
+                                                  textAlign: TextAlign.left,
                                                 ),
-                                               
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      ),
+                                              ),
+                                             
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                 ],
@@ -470,6 +467,7 @@ class _PageRumahState extends State<PageRumah> with TickerProviderStateMixin {
                               // ),
                               SizedBox(height: 22),
                               Text('Range Price '),
+                              SizedBox(height: 16),
                               // Container(
                               //   width: 350,
                               //   child: RangeSlider(
