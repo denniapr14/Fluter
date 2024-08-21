@@ -92,6 +92,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
       print('Error fetching data: $e');
     }
   }
+
   String sparateEveryThreeChars(String input) {
     StringBuffer result = StringBuffer();
     String reversedInput = input.split('').reversed.join('');
@@ -133,12 +134,11 @@ class _PageDetailRumahState extends State<PageDetailRumah>
       _sukuBunga = sukuBunga;
       _jangkaWaktu = jangkaWaktu;
     });
-    
   }
 
   void _launchURL() async {
     String url =
-        'https://formsliving.com/simulation-detail-type/${_dataDetailTipe['id_rumah']}/${_dataDetailTipe['id_tipe_rumah']}';
+        'https://formsliving.com/login?redirect_url=/simulation-detail-type/${_dataDetailTipe['id_rumah']}/${_dataDetailTipe['id_tipe_rumah']}';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -176,8 +176,6 @@ class _PageDetailRumahState extends State<PageDetailRumah>
     print(_listDataDenah);
     print('index tipe rumah : ${widget.index}');
   }
-
-  
 
   String formatRupiah(double amount) {
     final NumberFormat formatCurrency = NumberFormat.currency(
@@ -259,7 +257,6 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                         padding: EdgeInsets.fromLTRB(40, 0, 20, 0),
                         alignment: Alignment.center,
                         child: Column(
-                          
                           children: [
                             Text(
                               'Simulation KPR',
@@ -308,7 +305,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                                     controller: uangMukaController,
                                     decoration: InputDecoration(
                                       labelText: 'Down Payment (%)',
-                                        border: OutlineInputBorder(),
+                                      border: OutlineInputBorder(),
                                     ),
                                   ),
                                   SizedBox(height: 16.0),
@@ -316,7 +313,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                                     controller: sukuBungaController,
                                     decoration: InputDecoration(
                                       labelText: 'Interest (%)',
-                                        border: OutlineInputBorder(),
+                                      border: OutlineInputBorder(),
                                     ),
                                   ),
                                   SizedBox(height: 16.0),
@@ -324,7 +321,7 @@ class _PageDetailRumahState extends State<PageDetailRumah>
                                     controller: jangkaWaktuController,
                                     decoration: InputDecoration(
                                       labelText: 'Time period (Year)',
-                                        border: OutlineInputBorder(),
+                                      border: OutlineInputBorder(),
                                     ),
                                   ),
                                 ],
